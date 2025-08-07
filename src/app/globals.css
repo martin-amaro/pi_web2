@@ -159,6 +159,14 @@ input {
   -webkit-user-drag: none;
 }
 
+input,
+button,
+select {
+  &:disabled {
+    @apply opacity-55 pointer-events-none;
+  }
+}
+
 .header-link {
   @apply relative py-4 px-3 transition-all duration-300 text-neutral-900 hover:text-black font-medium
   /*text-tiny font-inter*/;
