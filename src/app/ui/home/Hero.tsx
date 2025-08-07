@@ -12,7 +12,7 @@ export default function Hero() {
                 <video
                     className="rounded-[10px] w-full h-full object-cover sm:rounded-none sm:m-0"
                     src="/videos/hero.mp4"
-                    poster="/images/hero.png"
+                    poster="/images/faq.jpg"
                     autoPlay
                     loop
                     muted
