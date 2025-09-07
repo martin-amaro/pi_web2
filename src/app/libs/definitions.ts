@@ -19,6 +19,7 @@ export interface CategoryItem {
 export interface AuthInputProps {
     label: string;
     name: string;
+    value: string;
     type: string;
     action: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled: boolean;

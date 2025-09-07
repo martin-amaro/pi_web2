@@ -1,3 +1,4 @@
+import { HeaderGuest } from "./components/HeaderGuest";
 
 export default function RootLayout({
   children,
@@ -6,6 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <div>
+        <HeaderGuest />
         {children}
     </div>
 

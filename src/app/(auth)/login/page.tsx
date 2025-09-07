@@ -1,15 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { AuthInput } from '../ui/auth/AuthInput'
-import Button from '../ui/Button';
-import { APP_NAME } from '../config';
+import { AuthInput } from './components/AuthInput'
+import Button from '../../ui/Button';
+import { APP_NAME } from '../../config';
 import Link from 'next/link';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import { AuthError } from '../ui/auth/AuthError';
+import { AuthError } from './components/AuthError';
 import { LoaderCircle } from 'lucide-react';
-import { validateForm } from '../utils/auth';
+import { validateForm } from '../../utils/auth';
 
 export default function page() {
     const { login, error, setError } = useAuth();
@@ -57,7 +57,7 @@ export default function page() {
                     <div className="w-full">
 
 
-                        <form onSubmit={handleSubmit} >
+                        <form onSubmit={handleSubmit} method='POST'>
                             <div className="space-y-6">
                                 <AuthInput
                                     label="Correo electrónico"
@@ -67,6 +67,7 @@ export default function page() {
                                     disabled={false}
                                     placeholder="Enter email"
                                     error={errors.email}
+                                    value={email}
                                 />
 
                                 <AuthInput
@@ -77,6 +78,8 @@ export default function page() {
                                     disabled={false}
                                     placeholder="Enter password"
                                     error={errors.password}
+                                    value={password}
+
                                 />
 
                             </div>
@@ -86,7 +89,7 @@ export default function page() {
                             <div className="mt-12">
                                 <Button
                                     className='w-full my-0 flex justify-center'
-                                    disabled={loading}
+                                    disabled={loading }
                                     buttonType="submit"
                                 >
                                     {loading ? <LoaderCircle className='animate-spin' /> : "Continuar"}

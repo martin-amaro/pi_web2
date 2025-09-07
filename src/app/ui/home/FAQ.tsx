@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Badge } from '../Badge';
+import clsx from 'clsx';
 
 const questions = [
     {
@@ -73,21 +74,47 @@ export default function FAQ() {
                         <p className="text-neutral-500">No hay preguntas disponibles.</p>
                     )}
                     {preguntas.map((pregunta, idx) => (
-                        <div className="faq-item w-full select-none" key={idx}>
+                        <div className="w-full select-none" key={idx}>
                             <button
-                                className={`faq-title w-full flex justify-between items-center text-left gap-2 px-5 py-3 text-lg lg:text-lg bg-white text-neutral-700 transition-all cursor-pointer`}
                                 onClick={() => toggleFAQ(idx)}
+                                className={clsx(
+                                    "w-full flex justify-between items-center text-left gap-2 px-5 py-3 text-lg lg:text-lg transition-all cursor-pointer",
+                                    activeIndex === idx
+                                        ? "bg-neutral-100 text-neutral-900"
+                                        : "bg-white text-neutral-700"
+                                )}
                             >
-                                <span className='flex-1'>{pregunta.pregunta}</span>
-                                <svg className="fal w-7 h-7 shrink-0 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#303030">
-                                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                </svg>
+                                <span
+                                    className={clsx(
+                                        "flex-1 transition-transform duration-300",
+                                    )}
+                                >
+                                    {pregunta.pregunta}
+                                </span>
+
+                                <span className={clsx(
+                                    "transition-transform duration-300",
+                                    activeIndex === idx && "rotate-[135deg]"
+                                )}>
+                                    <svg className="w-7 h-7 shrink-0 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#303030">
+                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                                    </svg>
+                                </span>
                             </button>
-                            <div className={`faq-content grid transition-[grid-template-rows] duration-300 ease-in-out px-6 border-t border-t-[#878787] ${activeIndex === idx ? 'active' : ''}`}>
-                                <div className="faq-content__ov overflow-hidden">
-                                    <p className='text-neutral-500 my-4 text-base md:text-md leading-snug'>{pregunta.respuesta}</p>
+
+                            <div
+                                className={clsx(
+                                    "grid transition-[grid-template-rows] duration-300 ease-in-out px-6 border-t border-t-[#878787]",
+                                    activeIndex === idx ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                )}
+                            >
+                                <div className="overflow-hidden">
+                                    <p className="text-neutral-500 my-4 text-base md:text-md leading-snug">
+                                        {pregunta.respuesta}
+                                    </p>
                                 </div>
                             </div>
+
                         </div>
                     ))}
                 </div>
