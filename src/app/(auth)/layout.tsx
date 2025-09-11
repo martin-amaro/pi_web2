@@ -6,10 +6,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <>
         <HeaderGuest />
-        {children}
-    </div>
+        <div className='flex-grow flex items-center justify-center mx-auto w-full h-screen' >
+          {children}
+        </div>
+    </>
 
   );
 }

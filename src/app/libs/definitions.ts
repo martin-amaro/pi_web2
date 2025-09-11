@@ -22,7 +22,7 @@ export interface AuthInputProps {
     value: string;
     type: string;
     action: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    disabled: boolean;
+    disabled?: boolean;
     placeholder?: string;
-    error: string | undefined;
+    error?: string | undefined;
 }

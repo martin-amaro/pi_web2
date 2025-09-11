@@ -1,65 +1,76 @@
-import { useState } from "react";
-import axios, { AxiosError } from 'axios';
+"use client";
 
-import React from 'react'
-import { APP_BACKEND } from "../config";
+import { signIn, signOut } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function useAuth() {
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-    const [token, setToken] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
-    const login = async (email: string, password: string): Promise<boolean> => {
-        try {
-            const response = await axios.post(`${APP_BACKEND}/auth/login`, {
-                email,
-                password
-            });
-            setToken(response.data.token);
-            localStorage.setItem('token', response.data.token);
-            setError(null);
-            return true;
-
-        } catch (err) {
-            const error = err as AxiosError;
-
-            if (error.response) {
-                const status = error.response.status;
-                const data = error.response.data;
-
-                switch (status) {
-                    case 401:
-                        setError("Correo o contraseña incorrectos.");
-                        break;
-
-                    case 400:
-                        if (data && typeof data === 'object') {
-                            const fields = data as Record<string, string>;
-                            const firstMessage = Object.values(fields)[0];
-                            setError(firstMessage || "Solicitud incorrecta.");
-                        } else {
-                            setError("Solicitud incorrecta.");
-                        }
-                        break;
-
-                    case 500:
-                        setError("Error interno del servidor.");
-                        break;
-
-                    default:
-                        setError((data as any).message || "Error desconocido.");
-                }
-            } else {
-                setError("No hay respuesta del servidor.");
-            }
-            return false
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      // 1. Valida primero contra tu API
+      const validateRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
         }
-    }
+      );
 
-    const logout = () => {
-        setToken(null);
-        localStorage.removeItem('token');
-    }
+      if (!validateRes.ok) {
+        const errorData = await validateRes.json().catch(() => ({}));
 
-    return { token, login, logout, error, setError }
+        switch (validateRes.status) {
+          case 401:
+            setError("Correo o contraseña incorrectos.");
+            break;
+          case 400:
+            setError(errorData.message || "Datos inválidos.");
+            break;
+          case 500:
+            setError("Error interno del servidor.");
+            break;
+          default:
+            setError("Error de conexión con el servidor.");
+        }
+        return false;
+      }
+
+      // 2. Si la validación es exitosa, crea la sesión con NextAuth
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false, // ⚡ controlamos la redirección manualmente
+      });
+
+      if (res?.error) {
+        setError("Error al crear la sesión.");
+        return false;
+      }
+
+      setError(null);
+
+      // 3. Redirige manualmente al dashboard
+      router.push("/dashboard");
+
+      return true;
+    } catch (err: any) {
+      console.error("Login error:", err);
+      if (err.message?.includes("fetch failed")) {
+        setError("No hay conexión con el servidor.");
+      } else {
+        setError("Error inesperado. Intenta nuevamente.");
+      }
+      return false;
+    }
+  };
+
+  const logout = () => {
+    signOut({ callbackUrl: "/login" });
+  };
+
+  return { login, logout, error, setError };
 }

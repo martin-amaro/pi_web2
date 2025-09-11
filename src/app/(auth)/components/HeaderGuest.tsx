@@ -17,7 +17,7 @@ export const HeaderGuest = () => {
     }, [menuOpen]);
 
     return (
-        <header className="w-full bg-white border-b py-2 lg:py-0  border-gray-300">
+        <header className="fixed w-full bg-white border-b py-2 lg:py-0  border-gray-300">
             <div className="w-full mx-auto flex justify-between items-center px-3 py-2 md:px-12 max-w-[1900px]">
                 <div className="flex items-center gap-10">
 
