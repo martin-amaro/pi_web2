@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ChevronDown, CircleUserRound, LogOut, User } from "lucide-react";
+import { getRole } from "@/app/utils/roles";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -35,7 +36,7 @@ export default function ProfileButton() {
               {session?.user?.name ?? "Invitado"}
               <p className="text-tiny text-neutral-700 font-normal">
                 {/* {ROLE_INFO[user.role]?.[0]} */}
-                Admin
+                {getRole(session?.user?.role)}
               </p>
             </span>
           </div>

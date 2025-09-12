@@ -51,13 +51,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const user = await res.json();
           if (!user) return null;
 
-          console.log("User++++++++++++++");
-          console.log(user);
-
           return {
             id: user.id,
             name: user.name,
             email: user.email,
+            role: user.role,
+            provider: user.provider || null
           };
         } catch (err: any) {
           // 🚨 Captura cuando no hay backend disponible
@@ -76,6 +75,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     //   return "/dashboard";
     // },
 
+    async jwt({ token, user }) {
+      // Primera vez que el usuario inicia sesión
+      if (user) {
+        token.id = (user as any).id;
+        token.name = user.name;
+        token.email = user.email;
+
+        // lo que devuelva tu backend extra
+        token.address = (user as any).address || null;
+        token.role = (user as any).role || "user";
+        token.provider = (user as any).provider || null;
+      }
+      return token;
+    },
+
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl;
 
@@ -88,20 +102,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (isPublic) return true;
 
-      // Protege todo /dashboard
       if (pathname.startsWith("/dashboard")) {
         return !!auth?.user;
       }
 
-      // Todo lo demás pasa
       return true;
     },
 
     async signIn({ user, account }) {
-      // Cuando alguien entra con Google
       if (account?.provider === "google") {
         try {
-          // Enviar datos básicos al backend para registrar/actualizar el usuario
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/oauth`,
             {
@@ -116,19 +126,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
           );
 
-          if (!res.ok) {
-            console.error("Error creando usuario en backend:", res.status);
-            return false;
-          }
+          if (!res.ok) return false;
 
-          // El backend te devuelve el usuario completo o token, según tu diseño
           const backendUser = await res.json();
-          console.log("Usuario del backend:", backendUser);
 
-          // Puedes guardar cosas en el JWT si quieres
+          console.log("-----------------")
+          console.log(backendUser)
+
+          // devuelves los extras que quieres pasar
           user.id = backendUser.id;
           user.name = backendUser.name;
           user.email = backendUser.email;
+          user.role = backendUser.role;
+          user.provider = backendUser.provider;
         } catch (err) {
           console.error("Error en signIn:", err);
           return false;
@@ -139,9 +149,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token }) {
-      if (token) {
-        session.user = session.user || {};
+      if (token && session.user) {
         (session.user as any).id = token.id;
+        (session.user as any).address = token.address;
+        (session.user as any).role = token.role;
+        (session.user as any).provider = token.provider;
       }
       return session;
     },

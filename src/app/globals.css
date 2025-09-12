@@ -206,6 +206,11 @@ ul {
   list-style: none;
 }
 
+* {
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
 a,
 button,
 label,
