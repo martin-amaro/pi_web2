@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { AuthInput } from "../../components/AuthInput";
-import useAuth from "@/app/hooks/[old]useAuth";
+import useAuth from "@/app/hooks/useAuth";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import Button from "@/app/ui/Button";
@@ -10,15 +10,17 @@ import { APP_NAME } from "@/app/config";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { validateForm } from "@/app/utils/auth";
+import { AuthError } from "../../components/AuthError";
+import { AuthInputError } from "../../components/AuthInputError";
 
 export default function RegisterForm() {
-  const { login, error, setError } = useAuth();
+  const { register, login, error, setError } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [terms, setTerms] = useState(false);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; terms?: string; }>(
     {}
   );
 
@@ -28,19 +30,20 @@ export default function RegisterForm() {
     e.preventDefault();
 
     setLoading(true);
+    console.log("ds")
     setErrors({});
     setError("");
 
-    const formErrors = validateForm(email, password);
+    const formErrors = validateForm(email, password, name, terms);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       setLoading(false);
       return;
     }
 
-    const success = await login(email, password);
+    const success = await register(name, email, password);
     if (success) {
-      router.push("/");
+      router.push("/dashboard");
     }
 
     setLoading(false);
@@ -48,7 +51,7 @@ export default function RegisterForm() {
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit} method="POST">
         <div className="space-y-6">
           <AuthInput
             label="Nombre y apellido"
@@ -58,7 +61,7 @@ export default function RegisterForm() {
             disabled={false}
             placeholder="Ingrese el nombre"
             value={name}
-            // error={errors.name}
+            error={errors.name}
           />
 
           <AuthInput
@@ -69,7 +72,7 @@ export default function RegisterForm() {
             disabled={false}
             placeholder="Ingrese el correo"
             value={email}
-            // error={errors.name}
+            error={errors.email}
           />
 
           <AuthInput
@@ -82,16 +85,6 @@ export default function RegisterForm() {
             error={errors.password}
             value={password}
           />
-
-          {/* <AuthInput
-                        label="Contraseña"
-                        name="password"
-                        type="password"
-                        action={handleChangePassword}
-                        disabled={loading}
-                        placeholder="Enter password"
-                        error={errors.password}
-                    /> */}
 
           <div className="flex items-center">
             <input
@@ -115,17 +108,17 @@ export default function RegisterForm() {
               </a>
             </label>
           </div>
-          {/* <ErrorMessage message={errors.terms} /> */}
+          <AuthInputError message={errors.terms} />
         </div>
 
-        {/* {serverError && <AuthError message={serverError} />} */}
+        {error && <AuthError message={error} />}
 
         <div className="mt-12">
           <Button
             // type='submit'
-            // onClick={handleRegister}
             disabled={loading}
             className="btn-main w-full my-0! flex justify-center"
+            buttonType="submit"
           >
             {loading ? (
               <LoaderCircle className="animate-spin" />

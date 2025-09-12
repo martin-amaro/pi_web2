@@ -68,9 +68,64 @@ export default function useAuth() {
     }
   };
 
+  const register = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<boolean> => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        switch (res.status) {
+          case 400:
+            setError(errorData.message || "Datos inválidos.");
+            break;
+          case 409:
+            setError("El correo ya está registrado.");
+            break;
+          case 500:
+            setError("Error interno del servidor.");
+            break;
+          default:
+            setError("Error desconocido.");
+        }
+        return false;
+      }
+
+      // ✅ Si el registro funciona, logueamos de inmediato
+      const loginRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (loginRes?.error) {
+        setError("Usuario creado pero no se pudo iniciar sesión.");
+        return false;
+      }
+
+      setError(null);
+      router.push("/dashboard");
+      return true;
+    } catch (err: any) {
+      console.error("Register error:", err);
+      setError("No se pudo conectar al servidor.");
+      return false;
+    }
+  };
+
   const logout = () => {
     signOut({ callbackUrl: "/login" });
   };
 
-  return { login, logout, error, setError };
+  return { login, register, logout, error, setError };
 }

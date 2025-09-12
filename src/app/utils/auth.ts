@@ -1,7 +1,9 @@
-export const validateForm = (email: string, password: string) => {
+export const validateForm = (email: string, password: string, name?: string, terms?: boolean) => {
     const errors: {
+        name?: string,
         email?: string,
-        password?: string
+        password?: string,
+        terms?: string
     } = {};
 
     if (!email) {
@@ -14,6 +16,18 @@ export const validateForm = (email: string, password: string) => {
         errors.password = 'La contraseña es obligatoria.';
     } else if (password.length < 6) {
         errors.password = 'La contraseña debe tener al menos 6 caracteres.';
+    }
+
+    if (name !== undefined) {
+      if (!name) {
+        errors.name = "El nombre es obligatorio";
+      }
+    }
+
+    if (terms !== undefined) {
+      if (!terms) {
+        errors.terms = "Debes aceptar los términos y condiciones.";
+      }
     }
 
 

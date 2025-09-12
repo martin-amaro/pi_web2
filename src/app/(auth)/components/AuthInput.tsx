@@ -13,6 +13,7 @@ export const AuthInput = ({ label, name, type, value, action, disabled, placehol
                 disabled={disabled}
                 className="text-slate-800 bg-white border border-slate-300 w-full text-base px-4 py-3 rounded-md outline-blue-500"
                 placeholder={placeholder}
+                required
             />
             <AuthInputError message={error} />
         </div>
