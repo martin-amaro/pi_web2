@@ -9,7 +9,7 @@ export default function Button({ children, type = "primary", disabled, className
     const typeStyles = {
         primary: "bg-[#6559ff] text-white font-medium hover:bg-blue-700 px-4 py-2.5",
         secondary: "bg-white text-[#6559ff] font-medium hover:bg-gray-100 px-4 py-2.5",
-        danger: "bg-red-600 text-white hover:bg-red-700",
+        danger: "bg-red-600 text-white hover:bg-red-700 px-4 py-2.5 font-medium" ,
         outline: "",
         text: "text-blue-600 font-medium hover:underline! ml-1 px-1 mx-2"
     };

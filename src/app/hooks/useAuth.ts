@@ -39,11 +39,10 @@ export default function useAuth() {
         return false;
       }
 
-      // 2. Si la validación es exitosa, crea la sesión con NextAuth
       const res = await signIn("credentials", {
         email,
         password,
-        redirect: false, // ⚡ controlamos la redirección manualmente
+        redirect: false,
       });
 
       if (res?.error) {
@@ -53,7 +52,6 @@ export default function useAuth() {
 
       setError(null);
 
-      // 3. Redirige manualmente al dashboard
       router.push("/dashboard");
 
       return true;
@@ -101,7 +99,6 @@ export default function useAuth() {
         return false;
       }
 
-      // ✅ Si el registro funciona, logueamos de inmediato
       const loginRes = await signIn("credentials", {
         email,
         password,

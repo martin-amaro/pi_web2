@@ -12,7 +12,7 @@ import useAuth from '@/app/hooks/useAuth';
 import { signIn } from 'next-auth/react';
 
 export default function LoginForm() {
-    const { login, error, setError } = useAuth();
+    const { login, error, setError, } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);

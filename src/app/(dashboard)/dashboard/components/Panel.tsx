@@ -192,10 +192,10 @@ export const Panel = () => {
           <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg w-full dashboard-search">
             <Search className="w-4 h-4 text-gray-700" />
             <input
-              type="text"
+              type="search"
               spellCheck="false"
               placeholder="Buscar"
-              autoComplete="new-password"
+              autoComplete="search"
               onKeyDown={handleSearch}
               className="bg-transparent outline-none text-sm text-gray-700 w-full placeholder-gray-500"
               defaultValue={query}

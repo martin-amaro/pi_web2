@@ -47,3 +47,13 @@ export function isValidEmail(email: string) {
 
   return emailRegex.test(email);
 }
+
+export const validatePassword = (password: string) => {
+    if (!password) {
+        return 'La contraseña es obligatoria.';
+    }
+    if (password.length < 6) {
+        return 'La contraseña debe tener al menos 6 caracteres.';
+    }
+    return '';
+};
