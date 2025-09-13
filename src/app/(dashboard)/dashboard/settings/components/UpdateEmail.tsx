@@ -13,26 +13,99 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useMessage } from "../../MessageProvider";
+import { s } from "framer-motion/client";
+import { InputError } from "../../components/InputError";
+import { isValidEmail } from "@/app/utils/auth";
 
 export default function UpdateEmail() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState('');
   const [email, setEmail] = useState(session?.user?.email || "");
   const [newEmail, setNewEmail] = useState(email);
+  const token = (session?.user as any)?.accessToken;
 
-  const handleSave = () => {
-    console.log("Nuevo email:", newEmail);
+  const { showMessage } = useMessage();
 
-    setEmail(newEmail);
+  
 
-    setOpen(false);
+  const handleSave = async () => {
+      showMessage("Correo actualizado con éxito", "success");
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ email: newEmail }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error("Error al actualizar correo:", errorData);
+        alert(errorData.message || "No se pudo actualizar el correo");
+        return;
+      }
+
+      // Si tu backend devuelve el usuario actualizado:
+      const updatedUser = await res.json();
+
+      // Actualizar la sesión correctamente
+      const updatedSession = await update({
+        user: {
+          ...session?.user,
+          id: updatedUser.id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          role: updatedUser.role,
+          provider: updatedUser.provider,
+          accessToken: updatedUser.token || token,
+        },
+        expires: session?.expires || "",
+      });
+
+      // Actualizar estados locales
+      setEmail(updatedUser.email);
+      setNewEmail("");
+
+      setOpen(false);
+      showMessage("Correo actualizado con éxito", "success");
+    } catch (err) {
+      showMessage("Error al actualizar el correo", "error");
+
+    } finally {
+    }
   };
 
   const handleCancelOrClose = () => {
     setOpen(false);
     setNewEmail(email);
   };
+
+  useEffect(() => {
+    const value = newEmail;
+
+    if (value.length === 0) {
+        setError('El correo es obligatorio');
+        return;
+    }
+
+    if (value === email) {
+        setError('El correo no puede ser igual al actual');
+        return;
+    }
+
+    if (value && !isValidEmail(value)) {
+        setError('Correo inválido');
+        return;
+    }
+
+    setError('');
+  }, [error, email, newEmail]);
 
   return (
     <div className="mt-8 border-b border-gray-200 pb-4 flex flex-col middle:flex-row middle:items-center justify-between">
@@ -41,12 +114,10 @@ export default function UpdateEmail() {
           Correo electrónico
         </label>
         <div className="flex items-center gap-2">
-          {session?.user?.provider === "google" && (
+          {(session?.user as any).provider === "google" && (
             <img src="/images/google.svg" className="size-4" alt="" />
           )}
-          <p className="text-neutral-500 text-sm">
-            { email }
-          </p>
+          <p className="text-neutral-500 text-sm">{email}</p>
         </div>
       </div>
       <div className="mt-4 middle:mt-0 middle:ml-4 whitespace-nowrap gap-4 flex">
@@ -58,7 +129,7 @@ export default function UpdateEmail() {
           }}
         >
           <DialogTrigger asChild>
-            {session?.user?.provider === null && (
+            {(session?.user as any).provider === null && (
               <Button type="text">Actualizar</Button>
             )}
           </DialogTrigger>
@@ -82,30 +153,25 @@ export default function UpdateEmail() {
                   id="name-1"
                   name="name"
                   type="email"
-                  defaultValue={newEmail}
+                  // defaultValue={newEmail}
+                  autoComplete="new-email"
+                  spellCheck={false}
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   required
                 />
+
+                {error && <InputError message={error} />}
               </div>
-              <div className="grid gap-3">
-                <Label htmlFor="username-1">
-                  Confirmar dirección de correo electrónico
-                </Label>
-                <Input
-                  id="username-1"
-                  name="username"
-                  type="email"
-                  defaultValue=""
-                  required
-                />
-              </div>
+              
             </div>
             <DialogFooter>
               <Button type="secondary" onClick={handleCancelOrClose}>
                 Cancelar
               </Button>
-              <Button onClick={handleSave}>Guardar</Button>
+              <Button onClick={handleSave} disabled={error.length !== 0}>
+                Guardar
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

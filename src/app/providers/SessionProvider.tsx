@@ -1,6 +1,7 @@
 // app/providers.tsx
 "use client";
 
+import { LoaderCircle } from "lucide-react";
 import { SessionProvider, useSession } from "next-auth/react";
 import React from "react";
 
@@ -10,7 +11,9 @@ function SessionGate({ children }: { children: React.ReactNode }) {
   if (status === "loading") {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-neutral-500">Cargando sesión...</p>
+        <div className="w-full min-h-screen flex items-center justify-center">
+          <LoaderCircle className="w-8 h-8 text-blue-600 animate-spin" />
+        </div>
       </div>
     );
   }

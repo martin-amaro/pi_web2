@@ -1,4 +1,6 @@
+import { Message } from "./components/Message";
 import { Panel } from "./components/Panel";
+import { MessageProvider } from "./MessageProvider";
 
 export default function RootLayout({
   children,
@@ -11,7 +13,7 @@ export default function RootLayout({
         <Panel />
 
         <main className="mt-14 middle:mt-0 overflow-y-auto relative">
-          {children}
+          <MessageProvider>{children}</MessageProvider>
         </main>
       </div>
     </div>

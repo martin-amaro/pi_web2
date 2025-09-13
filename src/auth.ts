@@ -24,6 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+
       authorize: async (credentials) => {
         try {
           console.log(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`);
@@ -56,7 +57,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name,
             email: user.email,
             role: user.role,
-            provider: user.provider || null
+            provider: user.provider || null,
+            accessToken: user.token,
           };
         } catch (err: any) {
           // 🚨 Captura cuando no hay backend disponible
@@ -69,24 +71,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   // AQUÍ se decide quién pasa y quién no
   callbacks: {
-    // Se ejecuta en el middleware
-
-    // redirect({ url, baseUrl}) {
-    //   return "/dashboard";
-    // },
-
-    async jwt({ token, user }) {
-      // Primera vez que el usuario inicia sesión
+    async jwt({ token, user, trigger, session }) {
+      // En login inicial
       if (user) {
         token.id = (user as any).id;
         token.name = user.name;
         token.email = user.email;
-
-        // lo que devuelva tu backend extra
+        token.accessToken = (user as any).accessToken;
         token.address = (user as any).address || null;
         token.role = (user as any).role || "user";
         token.provider = (user as any).provider || null;
       }
+
+      // Cuando se llama update() desde el cliente
+      if (trigger === "update" && session?.user) {
+        console.log("JWT callback - update trigger:", session);
+
+        // Actualizar token con los nuevos datos
+        token.id = session.user.id || token.id;
+        token.name = session.user.name || token.name;
+        token.email = session.user.email || token.email;
+        token.role = session.user.role || token.role;
+        token.provider = session.user.provider || token.provider;
+        token.accessToken = session.user.accessToken || token.accessToken;
+        token.address = session.user.address || token.address;
+      }
+
       return token;
     },
 
@@ -130,15 +140,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const backendUser = await res.json();
 
-          console.log("-----------------")
-          console.log(backendUser)
-
           // devuelves los extras que quieres pasar
           user.id = backendUser.id;
           user.name = backendUser.name;
           user.email = backendUser.email;
-          user.role = backendUser.role;
-          user.provider = backendUser.provider;
+          (user as any).role = backendUser.role;
+          (user as any).provider = backendUser.provider;
+          (user as any).accessToken = backendUser.token;
         } catch (err) {
           console.error("Error en signIn:", err);
           return false;
@@ -154,6 +162,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         (session.user as any).address = token.address;
         (session.user as any).role = token.role;
         (session.user as any).provider = token.provider;
+        (session.user as any).accessToken = token.accessToken;
+
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
       }
       return session;
     },
