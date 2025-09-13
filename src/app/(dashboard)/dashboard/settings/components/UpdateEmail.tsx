@@ -14,10 +14,10 @@ import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { useMessage } from "../../MessageProvider";
 import { s } from "framer-motion/client";
 import { InputError } from "../../components/InputError";
 import { isValidEmail } from "@/app/utils/auth";
+import { toast } from "sonner";
 
 export default function UpdateEmail() {
   const { data: session, status, update } = useSession();
@@ -27,12 +27,9 @@ export default function UpdateEmail() {
   const [newEmail, setNewEmail] = useState(email);
   const token = (session?.user as any)?.accessToken;
 
-  const { showMessage } = useMessage();
-
-  
 
   const handleSave = async () => {
-      showMessage("Correo actualizado con éxito", "success");
+      // showMessage("Correo actualizado con éxito", "success");
 
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
@@ -46,8 +43,7 @@ export default function UpdateEmail() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        console.error("Error al actualizar correo:", errorData);
-        alert(errorData.message || "No se pudo actualizar el correo");
+        toast.error(errorData.message || "No se pudo actualizar el correo");
         return;
       }
 
@@ -73,9 +69,11 @@ export default function UpdateEmail() {
       setNewEmail("");
 
       setOpen(false);
-      showMessage("Correo actualizado con éxito", "success");
+      toast.success("Correo actualizado con éxito", {
+        
+      });
     } catch (err) {
-      showMessage("Error al actualizar el correo", "error");
+      toast.error("Error al actualizar el correo",);
 
     } finally {
     }
