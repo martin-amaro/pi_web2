@@ -52,6 +52,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const user = await res.json();
           if (!user) return null;
 
+          console.log("User authenticated:", user);
+
           return {
             id: user.id,
             name: user.name,
@@ -59,6 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: user.role,
             provider: user.provider || null,
             accessToken: user.token,
+            businessId: user.businessId || null,
           };
         } catch (err: any) {
           // 🚨 Captura cuando no hay backend disponible
@@ -81,6 +84,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.address = (user as any).address || null;
         token.role = (user as any).role || "user";
         token.provider = (user as any).provider || null;
+        token.businessId = (user as any).businessId || null;
       }
 
       // Cuando se llama update() desde el cliente
@@ -95,6 +99,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.provider = session.user.provider || token.provider;
         token.accessToken = session.user.accessToken || token.accessToken;
         token.address = session.user.address || token.address;
+        token.businessId = (session.user as any).businessId || token.businessId;
       }
 
       return token;
@@ -147,6 +152,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           (user as any).role = backendUser.role;
           (user as any).provider = backendUser.provider;
           (user as any).accessToken = backendUser.token;
+          (user as any).businessId = backendUser.businessId || null;
+
         } catch (err) {
           console.error("Error en signIn:", err);
           return false;
@@ -163,6 +170,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         (session.user as any).role = token.role;
         (session.user as any).provider = token.provider;
         (session.user as any).accessToken = token.accessToken;
+        (session.user as any).businessId = token.businessId;
 
         session.user.name = token.name as string;
         session.user.email = token.email as string;

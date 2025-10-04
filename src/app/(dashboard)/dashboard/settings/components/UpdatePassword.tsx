@@ -106,6 +106,7 @@ export default function UpdatePassword() {
                     }}
                 >
                     <DialogTrigger asChild>
+                        
                         <Button type="text">Actualizar</Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -118,15 +119,15 @@ export default function UpdatePassword() {
                         </DialogHeader>
                         <div className="grid gap-6">
                             <div className="grid gap-3">
-                                <Label htmlFor="pass-1">
+                                <Label htmlFor="pass-3">
                                     Contraseña actual
                                 </Label>
                                 <Input
-                                    id="pass-1"
-                                    name="name"
+                                    id="pass-3"
+                                    name="password"
                                     type="password"
                                     // defaultValue={newEmail}
-                                    autoComplete='current-password'
+                                    autoComplete='off'
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
