@@ -43,7 +43,7 @@ export default function RegisterForm() {
 
     const success = await register(name, email, password);
     if (success) {
-      router.push("/dashboard");
+      router.push("/pricing");
     }
 
     setLoading(false);

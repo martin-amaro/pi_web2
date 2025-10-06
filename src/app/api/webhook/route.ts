@@ -19,8 +19,8 @@ export async function POST(req: Request) {
       const businessId = session.metadata?.businessId;
       const stripeSubscriptionId = session.subscription as string;
       const stripeCustomerId = session.customer as string;
-      const planName = session.metadata?.planName || "Pro"; // opcional
-      const status = "active";
+      const planName = session.metadata?.planName || "pro"; // opcional
+      const status = "ACTIVE";
 
       const userEmail = session.metadata?.token;
       const stripeSessionId = session.id;
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
           businessId,
           stripeSubscriptionId,
           stripeCustomerId,
+          stripeSessionId,
           planName,
           status,
         }),

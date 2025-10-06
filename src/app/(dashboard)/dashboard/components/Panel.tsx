@@ -20,6 +20,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 // import { ProfileButton } from "./ProfileButton";
 import { MenuBurger } from "./MenuBurger";
 import ProfileButton from "./ProfileButton";
+import { ProBadge } from "./ProBadge";
+import { useSession } from "next-auth/react";
+import { isFree, isPro } from "@/app/utils/plans";
 
 const PanelItem = ({
   icon,
@@ -29,6 +32,7 @@ const PanelItem = ({
   className = "",
   headerLink = false,
   onClick = () => {},
+  pro = false
 }: {
   icon: React.ReactNode;
   label: string;
@@ -37,7 +41,11 @@ const PanelItem = ({
   className?: string;
   headerLink?: boolean;
   onClick?: () => void;
+  pro?: boolean;
 }) => {
+
+  const { data: session } = useSession();
+
   return (
     <Link
       href={path}
@@ -53,6 +61,7 @@ const PanelItem = ({
     >
       <span>{icon}</span>
       {label}
+      {pro && isFree(session?.user) && <ProBadge />}
     </Link>
   );
 };
@@ -102,6 +111,7 @@ const PanesItemList = ({
         active={pathname === "/dashboard/customers"}
         headerLink={mobile}
         onClick={onItemClick}
+        pro={true}
       />
 
       <PanelItem
@@ -114,9 +124,9 @@ const PanesItemList = ({
         }
         headerLink={mobile}
         onClick={onItemClick}
+        pro={true}
       />
 
-      {/* Ya sin roles */}
       <PanelItem
         icon={<UsersRound className="w-5 h-5" />}
         label="Personal"
@@ -124,6 +134,7 @@ const PanesItemList = ({
         active={pathname === "/dashboard/staff"}
         headerLink={mobile}
         onClick={onItemClick}
+        pro={true}
       />
 
       <hr className={!mobile ? "border-t-neutral-200 mt-0 my-4" : "hidden"} />

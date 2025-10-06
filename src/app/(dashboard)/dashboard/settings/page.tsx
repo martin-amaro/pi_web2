@@ -7,6 +7,7 @@ import UpdateEmail from "./components/UpdateEmail";
 import UpdatePassword from "./components/UpdatePassword";
 import DeleteAccount from "./components/DeleteAccount";
 import { useSession } from 'next-auth/react';
+import { isPro } from "@/app/utils/plans";
 
 export default function page() {
   const { data: session, status, update } = useSession();
@@ -27,6 +28,10 @@ export default function page() {
         )}
         
         <DeleteAccount />
+        
+        {
+          isPro((session?.user as any)) && <h1 className="mt-6 text-green-600 font-medium">Gracias por ser usuario Pro!</h1>
+        }
       </div>
     </DashContainer>
   );

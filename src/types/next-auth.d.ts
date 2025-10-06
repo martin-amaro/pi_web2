@@ -6,6 +6,10 @@ declare module "next-auth" {
       id?: string;
       accessToken?: string;
       businessId?: string | null;
+      plan?: {
+        name: string;
+        status: string;
+      }
     } & DefaultSession["user"];
   }
 

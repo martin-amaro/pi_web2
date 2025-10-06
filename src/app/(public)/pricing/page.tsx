@@ -19,7 +19,7 @@ const plans = [
       { name: 'Soporte 24/7', included: false },
     ],
     buttonText: 'Comenzar gratis',
-    buttonLink: '/register',
+    buttonLink: '/dashboard',
     highlighted: false,
   },
   {
@@ -132,7 +132,7 @@ export const PricingPlans = () => {
               </ul>
 
               <Button
-                // href={plan.buttonLink}
+                href={plan.buttonLink}
                 className={`btn-main w-full text-center ${
                   plan.highlighted
                     ? 'bg-primary hover:bg-primary/90'
