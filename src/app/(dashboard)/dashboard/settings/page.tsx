@@ -11,6 +11,8 @@ import { useSession } from 'next-auth/react';
 export default function page() {
   const { data: session, status, update } = useSession();
 
+  console.log(session?.user);
+
   return (
     <DashContainer
       header="Cuenta"
