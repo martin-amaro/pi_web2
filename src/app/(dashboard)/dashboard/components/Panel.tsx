@@ -23,6 +23,7 @@ import ProfileButton from "./ProfileButton";
 import { ProBadge } from "./ProBadge";
 import { useSession } from "next-auth/react";
 import { isFree, isPro } from "@/app/utils/plans";
+import { isAdmin } from "@/app/utils/roles";
 
 const PanelItem = ({
   icon,
@@ -74,6 +75,7 @@ const PanesItemList = ({
   onItemClick?: () => void;
 }) => {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <>
@@ -127,7 +129,8 @@ const PanesItemList = ({
         pro={true}
       />
 
-      <PanelItem
+      { isAdmin(session?.user) && (
+        <PanelItem
         icon={<UsersRound className="w-5 h-5" />}
         label="Personal"
         path="/dashboard/staff"
@@ -135,7 +138,8 @@ const PanesItemList = ({
         headerLink={mobile}
         onClick={onItemClick}
         pro={true}
-      />
+        />
+      )}
 
       <hr className={!mobile ? "border-t-neutral-200 mt-0 my-4" : "hidden"} />
 
