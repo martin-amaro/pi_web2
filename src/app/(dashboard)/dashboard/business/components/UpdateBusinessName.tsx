@@ -22,7 +22,7 @@ import { InputError } from "../../components/InputError";
 const validateName = (name: string) => name.length >= 3 && name.length <= 50;
 
 export const UpdateBusinessName = () => {
-  const { data: session, status, update } = useSession();
+  const { data: session} = useSession();
   const { request } = useBackend();
   const [open, setOpen] = useState(false);
   const { getBusinessProp, refreshBusiness } = useBusiness();
@@ -38,7 +38,7 @@ export const UpdateBusinessName = () => {
       });
       refreshBusiness();
       toast.success("Nombre del negocio actualizado correctamente");
-    } catch (err) {
+    } catch {
       toast.error("Error al actualizar el nombre del negocio");
     } finally {
     }

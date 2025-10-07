@@ -62,7 +62,7 @@ const plans = [
   },
 ];
 
-export const PricingPlans = () => {
+const PricingPlans = () => {
   return (
     <div className='py-24 bg-gradient-to-b from-white to-[#f3f6fb]'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
