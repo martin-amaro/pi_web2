@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+<div align="center">
 
-First, run the development server:
+# Stocker
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+Stocker es un gestor de inventarios diseñado para todas las empresas y negocios, tanto pequeños como grandes.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<div align="center">
+   <img src="./public/images/logo.svg" width="200"/>
 
-## Deploy on Vercel
+   <br>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ![Version](https://img.shields.io/badge/version-1.0.0-orange)
+</div>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Instalación
+
+1. Clona el repositorio
+
+   ```bash
+   git clone https://github.com/martin-amaro/pi_web2
+   ```
+
+2. Accede al directorio
+
+   ```bash
+   cd pi_web2
+   ```
+
+3. Instala dependecias
+
+   ```bash
+   npm i
+   ```
+
+4. Genera el archivo `.env.local`
+   ```bash
+   cp .env.example .env.local
+   ```
+
+5. Genera una llave secreta para Auth.js
+
+   ```bash
+   npx auth secret
+   ```
+
+6. Ejecuta el proyecto
+
+   ```bash
+   npm run dev
+   ```
+   Podrás abrir el sitio en http://localhost:3000
+
+### Backend
+
+Para ejecutar este proyecto en su máxima capacidad, debes ejecutar el backend hecho con SpringBoot, disponible aquí.
+
+[👉 Ir al repositorio del Backend](https://github.com/martin-amaro/pi_backend2)
+
+### Autenticación con Google (opcional)
+
+1. Para usar la autenticación con Google (OAuth), debes obtener las credenciales [`aquí`]().
+
+2. Usarlas en el `.env.local`:
+
+   ```bash
+   GOOGLE_CLIENT_ID=
+   GOOGLE_CLIENT_SECRET
+   ```
+
+### Pagos con Stripe (Opcional)
+
+<div align="center">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/1200px-Stripe_Logo%2C_revised_2016.svg.png" width="80"/>
+</div>
+
+
+
+1. Para usar el sistema de pago para la subscripción de planes, debes obtener las credenciales de Stripe [`aquí`](). 
+
+2. Agregar credenciales en el `.env.local`:
+   ```bash
+   STRIPE_SECRET_KEY=
+   NEXT_PUBLIC_STRIPE_PUBLIC_KEY=
+   ```
+
+3. Descargar [Stripe CLI](https://docs.stripe.com/stripe-cli/install?install-method=windows) y seguir las instrucciones que mencionan (registrar la variable de entorno, iniciar sesión, etc.)
+
+4. Ejecutar el siguiente comando:
+
+   ```bash
+   stripe listen --forward-to localhost:3000/api/webhook
+   ```
+   
+   Lo cual hará que se disparé el `webhook` al momento de hacer compras dentro de la aplicación.
+
+5. Copiar el código del webhook (desde el comando anterior) y pegarlo en la siguiente sección del `.env.local`:
+
+   ```bash
+   STRIPE_WEBHOOK_SECRET=
+   ```
+
+## Tecnologías usadas
+
+- [Next.js](https://nextjs.org/)
+- [React](https://es.react.dev/)
+- [Auth.js](https://authjs.dev/) (+ Google OAuth)
+- [Stripe](https://stripe.com/es)
+
+## Créditos
+
+Desarrollado para [Cesde](https://www.cesde.edu.co/) por:
+- Martín Amaro
+- Daniel Múñoz
+- Diego Cárdenas
+
+</br>
+
+-----
+
+Stocker está basado e inspirado en [Square](https://squareup.com/us/en).

@@ -19,7 +19,7 @@ const plans = [
       { name: 'Soporte 24/7', included: false },
     ],
     buttonText: 'Comenzar gratis',
-    buttonLink: '/register',
+    buttonLink: '/dashboard',
     highlighted: false,
   },
   {
@@ -62,7 +62,7 @@ const plans = [
   },
 ];
 
-export const PricingPlans = () => {
+const PricingPlans = () => {
   return (
     <div className='py-24 bg-gradient-to-b from-white to-[#f3f6fb]'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -132,7 +132,7 @@ export const PricingPlans = () => {
               </ul>
 
               <Button
-                // href={plan.buttonLink}
+                href={plan.buttonLink}
                 className={`btn-main w-full text-center ${
                   plan.highlighted
                     ? 'bg-primary hover:bg-primary/90'

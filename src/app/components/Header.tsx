@@ -58,10 +58,6 @@ export default function Header() {
                 {" "}
                 <NavLink href="/pricing">Planes</NavLink>{" "}
               </li>
-              <li>
-                {" "}
-                <NavLink href="/pricing">Planes</NavLink>{" "}
-              </li>
             </ul>
           </nav>
         </div>

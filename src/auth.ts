@@ -62,6 +62,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             provider: user.provider || null,
             accessToken: user.token,
             businessId: user.businessId || null,
+            // address: user.address || null,
+            planName: user.planName || "free",
+            planStatus: user.subscriptionStatus || "INACTIVE",
           };
         } catch (err: any) {
           // 🚨 Captura cuando no hay backend disponible
@@ -85,6 +88,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = (user as any).role || "user";
         token.provider = (user as any).provider || null;
         token.businessId = (user as any).businessId || null;
+        token.planName = (user as any).planName || "free";
+        token.planStatus = (user as any).planStatus || "INACTIVE";
       }
 
       // Cuando se llama update() desde el cliente
@@ -100,6 +105,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.accessToken = session.user.accessToken || token.accessToken;
         token.address = session.user.address || token.address;
         token.businessId = (session.user as any).businessId || token.businessId;
+        token.planName = (session.user as any).planName || token.planName;
+        token.planStatus = (session.user as any).subscriptionStatus || token.subscriptionStatus;
       }
 
       return token;
@@ -171,6 +178,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         (session.user as any).provider = token.provider;
         (session.user as any).accessToken = token.accessToken;
         (session.user as any).businessId = token.businessId;
+        (session.user as any).plan = {
+          name: token.planName,
+          status: token.planStatus,
+        }
 
         session.user.name = token.name as string;
         session.user.email = token.email as string;

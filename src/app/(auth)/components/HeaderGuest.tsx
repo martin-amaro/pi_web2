@@ -1,11 +1,11 @@
 'use client'
 
-import { CircleUserRound, GraduationCap, MessageCircleQuestion, UserRound } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 
 export const HeaderGuest = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [menuOpen] = useState(false);
     // const { user, logout } = useAuth();
 
     useEffect(() => {
