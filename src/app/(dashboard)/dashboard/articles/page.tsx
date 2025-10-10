@@ -10,7 +10,6 @@ export default function page() {
       subtitle="Gestiona tu inventario y catálogo de servicios de manera eficiente"
       
     >
-      <p>hola</p>
       <Cop></Cop>
     </DashContainer>
   );

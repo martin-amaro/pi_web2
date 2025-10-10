@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
-import { Footer } from "./components/Footer";
-import BackendTesterWrapper from "./wrappers/BackendTesterWrapper";
+// Header, Footer and BackendTesterWrapper are intentionally not imported here — they are used in specific layouts/pages if needed.
 import Providers from "./providers/SessionProvider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -20,7 +18,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Stocker",
   description: "Organize your inventory",
+  icons: {
+    icon: [
+      { url: '/stocker.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ic', type: 'image/x-icon' },
+    ],
+    apple: '/stocker.svg',
+  },
 };
+
 
 export default function RootLayout({
   children,
