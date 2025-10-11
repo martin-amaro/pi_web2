@@ -57,3 +57,22 @@ export const validatePassword = (password: string) => {
     }
     return '';
 };
+
+export const validateText = (text: string, field?: string) =>  {
+  if (!text) {
+    return `${field || 'El campo'} es obligatorio`;
+  }
+  if (text.length < 6) {
+    return `${field || "El campo"} debe tener al menos 6 caracteres.`;
+  }
+  return "";
+}
+
+export const validateEmail = (email: string) => {
+  if (!email) {
+    return "El correo electrónico es obligatorio.";
+  } else if (!isValidEmail(email)) {
+    return "El formato del correo no es válido.";
+  }
+  return "";
+}

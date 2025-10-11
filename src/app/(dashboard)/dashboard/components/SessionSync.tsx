@@ -1,28 +1,19 @@
 "use client";
+import { useBackend } from "@/app/hooks/useBackend";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export default function SessionSync() {
   const { data: session, update } = useSession();
+  const { request } = useBackend();
 
   useEffect(() => {
     if (!session?.user?.accessToken) return;
 
     (async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/status`,
-          {
-            headers: {
-              Authorization: `Bearer ${session.user.accessToken}`,
-            },
-          }
-        );
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-
+        const data = await request("/subscriptions/status", { method: 'POST', token: session?.user?.accessToken});
+        
         // Solo actualiza si algo cambió
         if (data.planStatus !== session.user.plan?.status) {
           await update({
