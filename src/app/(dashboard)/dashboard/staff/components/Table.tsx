@@ -5,10 +5,10 @@ import { auth } from "@/auth";
 import { SearchX, UsersRound } from "lucide-react";
 
 interface UserQuery {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
+  id: number;
+  name: string;
+  email: string;
+  role: string;
 }
 
 export const Table = async ({
@@ -26,11 +26,14 @@ export const Table = async ({
     users?: UserQuery[];
   } = {};
   try {
-    staff = await backendRequest(`/business/users/search?query=${query}&page=${currentPage}`, {
-      method: "GET",
-      token: session?.user?.accessToken,
-    });
-    
+    staff = await backendRequest(
+      `/business/staff/search?query=${query}&page=${currentPage}`,
+      {
+        method: "GET",
+        token: session?.user?.accessToken,
+      }
+    );
+
     staff.users = staff?.users?.filter(
       (u: any) => (u.id as number).toString() !== session?.user?.id
     );
@@ -41,24 +44,31 @@ export const Table = async ({
 
   if (staff?.users?.length === 0 && query.length !== 0) {
     return (
-      <div className="w-full max-w-md mx-auto flex flex-col justify-center items-center text-neutral-600 h-48 gap-4">
-        <SearchX className="size-10" />
-
-        <h2 className="text-2xl font-medium font-app">
+      <div className="flex flex-col items-center justify-center text-center">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+          <SearchX className="w-8 h-8 text-gray-600" />
+        </div>
+        <h2 className="text-2xl font-semibold text-gray-800">
           No se han encontrado resultados
         </h2>
-        <p>Intenta probar con otros términos.</p>
+        <p className="mt-2 text-gray-500 max-w-sm">
+          Intenta ajustar los filtros o busca con otras palabras. 
+        </p>
       </div>
     );
   }
   if (staff?.users?.length === 0) {
     return (
-      <div className="w-full max-w-md mx-auto flex flex-col justify-center items-center text-neutral-600 h-48 gap-4">
-        <UsersRound className="size-10" />
-        <h2 className="text-2xl font-medium font-app">
+      <div className="flex flex-col items-center justify-center text-center">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
+          <UsersRound className="w-8 h-8 text-red-600" />
+        </div>
+        <h2 className="text-2xl font-semibold text-gray-800">
           Aún no tienes personal
         </h2>
-        <p>Agrega miembros para comenzar a construir tu equipo.</p>
+        <p className="mt-2 text-gray-500 max-w-sm">
+          Agrega miembros para comenzar a construir tu equipo.
+        </p>
       </div>
     );
   }
@@ -84,7 +94,12 @@ export const Table = async ({
 
         <tbody>
           {staff?.users?.map((user: any, index: number) => (
-            <UserRow key={index} user={user} onToggle={false} isChecked={false} />
+            <UserRow
+              key={index}
+              user={user}
+              onToggle={false}
+              isChecked={false}
+            />
           ))}
         </tbody>
       </table>

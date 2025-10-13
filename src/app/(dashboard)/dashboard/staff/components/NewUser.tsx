@@ -31,16 +31,18 @@ import {
 } from "@/app/utils/auth";
 import { toast } from "sonner";
 import { ROLE_INFO, ROLES } from "@/app/constants/roles";
-import { Copy, Info, Plus, RotateCw } from "lucide-react";
+import { Check, Copy, Info, Plus, RotateCw } from "lucide-react";
 import { generatePassword } from "@/app/utils/misc";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { useBackend } from "@/app/hooks/useBackend";
 import { createUserAction } from "../actions";
+import clsx from "clsx";
 
 export default function NewUser({ onCreated }: { onCreated?: () => void }) {
   const { data: session, status, update } = useSession();
   const { request } = useBackend();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("USER");
   const [hash, setHash] = useState("");
   const [error, setError] = useState<Record<string, string>>({});
@@ -52,15 +54,16 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
     // showMessage("Correo actualizado con éxito", "success");
 
     try {
+      setLoading(true);
       const res = await createUserAction({
         name,
         email,
         password: hash,
-        role
+        role,
       });
 
       setOpen(false);
-      toast.success("Correo actualizado con éxito", {});
+      toast.success("Empleado creado exitosamente.", {});
       handleClose();
     } catch (err: any) {
       switch (err.status) {
@@ -76,6 +79,9 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
           toast.error("No se pudo agregar el nuevo usuario");
       }
     } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -180,12 +186,11 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
                 //   onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
-              <Btn variant={"outline"}>
-                <Copy />
-              </Btn>
+              <CopyButton hash={hash}/>
               <Btn
                 variant={"outline"}
                 onClick={() => setHash(generatePassword(6))}
+                className="cursor-pointer"
               >
                 <RotateCw />
               </Btn>
@@ -202,7 +207,9 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
           </Button>
           <Button
             onClick={handleSave}
+            className="min-w-24"
             disabled={error.name !== "" || error.email !== ""}
+            loading={loading}
           >
             Guardar
           </Button>
@@ -211,3 +218,33 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
     </Dialog>
   );
 }
+
+const CopyButton = ({ hash }: { hash: string }) => {
+
+  const [anim, setAnim] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      setAnim(true);
+      await navigator.clipboard.writeText(hash);
+      toast.success("Contraseña copiada al portapapeles");
+    } catch (err) {
+      toast.error("No se pudo copiar la contraseña");
+    } finally {
+      setTimeout(() => {
+        setAnim(false);
+      }, 2000);
+    }
+  };
+
+  return (
+    <Btn
+      variant={"outline"}
+      className={"cursor-pointer"}
+      disabled={anim}
+      onClick={handleCopy}
+    >
+      {anim ? <Check /> : <Copy />}
+    </Btn>
+  );
+};

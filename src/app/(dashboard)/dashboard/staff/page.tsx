@@ -22,7 +22,7 @@ export default async function page({
 
 
   try {
-    const users = await backendRequest("/business/users", {
+    const users = await backendRequest("/business/staff", {
       method: "GET",
       token: session?.user?.accessToken,
     });

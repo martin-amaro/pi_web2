@@ -1,6 +1,7 @@
 import { ROLE_INFO } from "@/app/constants/roles";
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil } from "lucide-react";
+import { DeleteUser } from "./DeleteUser";
 
 export const UserRow = ({ user, isChecked, onToggle }) => (
   <tr className="bg-white border-b border-gray-200 hover:bg-gray-50 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
@@ -42,21 +43,25 @@ export const UserRow = ({ user, isChecked, onToggle }) => (
         {user.status || "Activo"}
       </div>
     </td>
-    <td className=" flex justify-end items-center">
-      <Button
-        variant={"ghost"}
-        className="font-medium text-blue-600 hover:underline cursor-pointer"
-        title="Visualizar"
-      >
-        <Eye />
-      </Button>
-      <Button
-        variant={"ghost"}
-        className="font-medium text-blue-600 hover:underline cursor-pointer"
-        title="Editar"
-      >
-        <Pencil />
-      </Button>
+    <td className=" ">
+      <div className="flex justify-end items-center">
+        <Button
+          variant={"ghost"}
+          className="font-medium text-blue-600 hover:underline cursor-pointer"
+          title="Visualizar"
+        >
+          <Eye />
+        </Button>
+        <Button
+          variant={"ghost"}
+          className="font-medium text-blue-600 hover:underline cursor-pointer"
+          title="Editar"
+        >
+          <Pencil />
+        </Button>
+        <DeleteUser id={user.id}/>
+
+      </div>
     </td>
   </tr>
 );

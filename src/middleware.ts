@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/login", "/register"];
 const PRIVATE_ROUTES = ["/dashboard", "/profile"];
-const ADMIN_ROUTES = ["/dashboard/staff", "/dashboard/settings"]; // ajusta según tus paths
+const ADMIN_ROUTES = ["/dashboard/staff"];
 
 function match(pathname: string, routes: string[]) {
   return routes.some(

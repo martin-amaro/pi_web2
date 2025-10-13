@@ -12,12 +12,16 @@ export async function createUserAction(data: {
 }) {
   const session = await auth();
 
-  await backendRequest("/business/create", {
+  await backendRequest("/business/staff", {
     method: "POST",
     token: session?.user?.accessToken,
     data,
   });
 
   // Esto vuelve a ejecutar el loader y muestra el skeleton
-  revalidatePath("/business/users");
+  revalidatePath("/business/staff");
+}
+
+export async function revalidate() {
+  revalidatePath("/business/staff");
 }

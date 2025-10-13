@@ -22,7 +22,7 @@ import { MenuBurger } from "./MenuBurger";
 import ProfileButton from "./ProfileButton";
 import { ProBadge } from "./ProBadge";
 import { useSession } from "next-auth/react";
-import { isFree, isPro } from "@/app/utils/plans";
+import { isFree } from "@/app/utils/plans";
 import { isAdmin } from "@/app/utils/roles";
 
 const PanelItem = ({
