@@ -1,5 +1,6 @@
 import React from 'react';
 import { ClipboardList, GraduationCap, Box, AlertCircle, CheckCircle, Megaphone } from 'lucide-react';
+import clsx from 'clsx';
 
 const features = [
   {
@@ -38,10 +39,14 @@ export default function FeatureCards() {
   return (
     <div className="bg-white py-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
         {features.map((feature, idx) => (
           <div
             key={idx}
-            className="border border-gray-200 rounded-xl p-5 shadow-sm cursor-pointer hover:outline-3 outline-blue-500 hover:shadow-md transition flex flex-col justify-between"
+            className={clsx(
+              "border border-gray-200 rounded-xl p-5 shadow-sm cursor-pointer", 
+              "hover:outline-3 outline-blue-500 hover:shadow-md transition flex flex-col justify-between"
+            )}
           >
             <div>
                 <div className="mb-3">{feature.icon}</div>

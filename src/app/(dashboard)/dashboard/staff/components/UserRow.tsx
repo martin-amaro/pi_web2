@@ -2,8 +2,24 @@ import { ROLE_INFO } from "@/app/constants/roles";
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil } from "lucide-react";
 import { DeleteUser } from "./DeleteUser";
+import type { ChangeEvent } from "react";
 
-export const UserRow = ({ user, isChecked, onToggle }) => (
+interface User {
+  id: number;
+  avatar?: string | null;
+  name: string;
+  email: string;
+  role: string;
+  status?: string;
+}
+
+type UserRowProps = {
+  user: User;
+  isChecked: boolean;
+  onToggle: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+export const UserRow = ({ user, isChecked, onToggle }: UserRowProps) => (
   <tr className="bg-white border-b border-gray-200 hover:bg-gray-50 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
     <td className="w-4 p-4">
       <div className="flex items-center">

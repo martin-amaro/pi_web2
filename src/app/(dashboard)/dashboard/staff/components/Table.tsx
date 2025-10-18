@@ -97,7 +97,7 @@ export const Table = async ({
             <UserRow
               key={index}
               user={user}
-              onToggle={false}
+              onToggle={() => {}}
               isChecked={false}
             />
           ))}

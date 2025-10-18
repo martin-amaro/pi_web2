@@ -13,25 +13,27 @@ import { Table } from "./components/Table";
 export default async function page({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams: Promise<{
     query?: string;
     page?: string;
-  };
+  }>;
 }) {
   const session = await auth();
 
-
+  let users = [];
   try {
-    const users = await backendRequest("/business/staff", {
+    users = await backendRequest("/business/staff", {
       method: "GET",
       token: session?.user?.accessToken,
     });
   } catch {
-    const users = [];
+    users = [];
   }
 
-  const query = (await searchParams)?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
+  // Await searchParams antes de usarlo
+  const params = await searchParams;
+  const query = params?.query || "";
+  const currentPage = Number(params?.page) || 1;
   const totalPages = 1;
 
   return (
@@ -45,17 +47,10 @@ export default async function page({
           <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
             <SearchStaff placeholder="Buscar empleados..." />
             <NewUser></NewUser>
-            {/* <CreateInvoice /> */}
           </div>
           <Suspense key={query + currentPage} fallback={<StaffListSkeleton />}>
             <Table query={query} currentPage={currentPage} />
           </Suspense>
-
-          {/* <UserTable>
-            <Suspense fallback={<StaffListSkeleton />}>
-              <StaffListLoader />
-            </Suspense>
-          </UserTable> */}
         </div>
       ) : (
         <PremiumFeature />
