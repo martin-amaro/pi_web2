@@ -5,6 +5,7 @@ export interface ButtonProps {
     href?: string;
     disabled?: boolean;
     onClick?: () => void;
+    loading?: boolean;
     buttonType?: "button" | "submit" | "reset";
 }
 
