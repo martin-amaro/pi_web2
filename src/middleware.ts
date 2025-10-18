@@ -3,15 +3,10 @@ import { NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/login", "/register"];
 const PRIVATE_ROUTES = ["/dashboard", "/profile"];
+const ADMIN_ROUTES = ["/dashboard/staff"];
 
-function isPublic(pathname: string) {
-  return PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
-  );
-}
-
-function isPrivate(pathname: string) {
-  return PRIVATE_ROUTES.some(
+function match(pathname: string, routes: string[]) {
+  return routes.some(
     (route) => pathname === route || pathname.startsWith(route + "/")
   );
 }
@@ -20,12 +15,22 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  if (isPublic(pathname) && session?.user) {
+  // Usuario autenticado intenta ir a login o register
+  if (match(pathname, PUBLIC_ROUTES) && session?.user) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  if (isPrivate(pathname) && !session?.user) {
+  // Ruta privada sin sesión
+  if (match(pathname, PRIVATE_ROUTES) && !session?.user) {
     return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // Solo admins pueden entrar a ciertas rutas
+  if (match(pathname, ADMIN_ROUTES)) {
+    const role = session?.user?.role;
+    if (role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard/unauthorized", req.url));
+    }
   }
 
   return NextResponse.next();

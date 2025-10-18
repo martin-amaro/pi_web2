@@ -7,7 +7,6 @@ import UpdateEmail from "./components/UpdateEmail";
 import UpdatePassword from "./components/UpdatePassword";
 import DeleteAccount from "./components/DeleteAccount";
 import { useSession } from 'next-auth/react';
-import { isPro } from "@/app/utils/plans";
 
 export default function page() {
   const { data: session, status, update } = useSession();

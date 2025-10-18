@@ -4,6 +4,7 @@ import DashContainer from '../components/DashContainer';
 import { UpdateBusinessName } from './components/UpdateBusinessName';
 import { UpdateBusinessType } from './components/UpdateBusinessType';
 import { useBusiness } from '@/app/context/BusinessContext';
+import { Subscription } from './components/Subscription';
 
 export default function page() {
 
@@ -16,7 +17,7 @@ export default function page() {
       <div className="max-w-[600px]">
         <UpdateBusinessName />
         <UpdateBusinessType />
-        
+        <Subscription />
       </div>
     </DashContainer>
   );

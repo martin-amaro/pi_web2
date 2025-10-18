@@ -151,7 +151,7 @@ const MainDialog = ({
           <div className="grid gap-3">
             <Select value={industry} onValueChange={setIndustry}>
               <SelectTrigger className="w-full font-[400] text-black">
-                <SelectValue placeholder="Select a fruit" />
+                <SelectValue placeholder="Selecciona un tipo" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
