@@ -31,8 +31,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ received: true });
       }
 
-      const backendUrl = process.env.BACKEND_URL; // ej: http://localhost:8080
-      const apiToken = process.env.INTERNAL_API_TOKEN; // opcional, por seguridad
+      const backendUrl = process.env.BACKEND_URL;
+      const apiToken = process.env.INTERNAL_API_TOKEN;
 
       console.log("\n\n")
 

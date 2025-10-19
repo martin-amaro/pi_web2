@@ -1,6 +1,6 @@
 "use client";
 import { useBackend } from "@/app/hooks/useBackend";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export default function SessionSync() {
@@ -27,6 +27,7 @@ export default function SessionSync() {
         }
       } catch (err) {
         console.error("Error al verificar plan:", err);
+        signOut();
       }
     })();
   }, [session?.user?.accessToken]);

@@ -14,6 +14,7 @@ export const hasRole = (user: any, ...allowedRoles: string[]) => {
   return user && allowedRoles.includes(user.role);
 };
 
+export const isLoggedIn = (user: any) => !!user;
 export const isAdmin = (user: any) => user?.role === ROLES.ADMIN;
 export const isUser = (user: any) => user?.role === ROLES.USER;
 export const canEditUsers = (user: any) =>

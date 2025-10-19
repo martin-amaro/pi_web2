@@ -1,4 +1,5 @@
 import { PLANS } from "@/app/constants/plans";
+import Button from "@/app/ui/Button";
 import { getPlanName } from "@/app/utils/plans";
 import { getRoleName } from "@/app/utils/roles";
 import { useSession } from "next-auth/react";
@@ -18,7 +19,7 @@ export const Subscription = () => {
         </div>
       </div>
       <div className="mt-4 middle:mt-0 middle:ml-4 whitespace-nowrap gap-4 flex">
-        
+        <Button type="text" href="/pricing">Cambiar</Button>
       </div>
     </div>
   );

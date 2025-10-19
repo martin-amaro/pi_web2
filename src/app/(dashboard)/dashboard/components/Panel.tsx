@@ -194,10 +194,7 @@ export const Panel = () => {
           href="/dashboard"
         >
           <picture>
-            <source
-              media="(max-width:1023px)"
-              srcSet={"/stocker.svg"}
-            />
+            <source media="(max-width:1023px)" srcSet={"/stocker.svg"} />
             <img className="h-8" src={"/images/logo.svg"} alt="" />
           </picture>
         </Link>
@@ -210,7 +207,7 @@ export const Panel = () => {
               type="text"
               spellCheck="false"
               placeholder="Buscar"
-              autoComplete="$search_off"
+              autoComplete={"x"}
               onKeyDown={handleSearch}
               className="bg-transparent outline-none text-sm text-gray-700 w-full placeholder-gray-500"
               defaultValue={query}
