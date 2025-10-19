@@ -8,14 +8,14 @@ export default function DashContainer({
   subtitle,
   children,
 }: {
-  header: string;
+  header?: string;
   title: string;
   subtitle: string;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <DashHeader title={header} />
+      {header && <DashHeader title={header} />}
       <div className="p-6">
         <DashTitle title={title}>
           {subtitle}
