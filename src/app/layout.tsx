@@ -7,6 +7,7 @@ import BackendTesterWrapper from "./wrappers/BackendTesterWrapper";
 import Providers from "./providers/SessionProvider";
 import { Toaster } from "@/components/ui/sonner";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,6 +33,8 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

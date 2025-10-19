@@ -124,11 +124,10 @@ export default function UpdatePassword() {
                                 </Label>
                                 <Input
                                     id="pass-3"
-                                    name="password"
+                                    name="ios"
                                     type="password"
                                     // defaultValue={newEmail}
-                                    autoComplete='off'
-                                    value={password}
+                                        value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
