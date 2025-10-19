@@ -11,13 +11,15 @@
 
 Stocker es un gestor de inventarios diseñado para todas las empresas y negocios, tanto pequeños como grandes.
 
-
-<div align="center">
-   <img src="./public/images/logo.svg" width="200"/>
-
    <br>
 
+
+<div align="center">
+   <img src="./public/images/intro.png" width="300"/>
+
+
    ![Version](https://img.shields.io/badge/version-1.0.0-orange)
+   
 </div>
 
 ## Instalación
@@ -66,7 +68,7 @@ Para ejecutar este proyecto en su máxima capacidad, debes ejecutar el backend h
 
 ### Autenticación con Google (opcional)
 
-1. Para usar la autenticación con Google (OAuth), debes obtener las credenciales [`aquí`]().
+1. Para usar la autenticación con Google (OAuth), debes obtener las credenciales [`aquí`](https://console.cloud.google.com/projectselector2/apis/credentials).
 
 2. Usarlas en el `.env.local`:
 
@@ -83,7 +85,7 @@ Para ejecutar este proyecto en su máxima capacidad, debes ejecutar el backend h
 
 
 
-1. Para usar el sistema de pago para la subscripción de planes, debes obtener las credenciales de Stripe [`aquí`](). 
+1. Para usar el sistema de pago para la subscripción de planes, debes obtener las credenciales de Stripe [`aquí`](https://dashboard.stripe.com). 
 
 2. Agregar credenciales en el `.env.local`:
    ```bash
