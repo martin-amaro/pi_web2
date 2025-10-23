@@ -30,7 +30,7 @@ export default function Page() {
       {canGoBack && (
         <Button
           className="mt-6 w-40"
-          type="secondary"
+          variant="secondary"
           onClick={() => router.back()}
         >
           Volver atrás

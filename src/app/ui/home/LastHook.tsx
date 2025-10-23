@@ -37,7 +37,7 @@ export default function LastHook() {
 
             <div className="flex flex-col sm:flex-row justify-center gap-4 m-8">
                 <Button className='px-6'>Comenzar gratis</Button>
-                <Button type="secondary" className='px-6'>Solicitar demo</Button>
+                <Button variant="secondary" className='px-6'>Solicitar demo</Button>
             </div>
 
             <div className="flex justify-center gap-4">

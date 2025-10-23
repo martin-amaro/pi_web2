@@ -128,7 +128,7 @@ export default function UpdateEmail() {
         >
           <DialogTrigger asChild>
             {(session?.user as any).provider === null && (
-              <Button type="text">Actualizar</Button>
+              <Button variant="text">Actualizar</Button>
             )}
           </DialogTrigger>
           <DialogContent>
@@ -164,7 +164,7 @@ export default function UpdateEmail() {
               
             </div>
             <DialogFooter>
-              <Button type="secondary" onClick={handleCancelOrClose}>
+              <Button variant="alternative" onClick={handleCancelOrClose}>
                 Cancelar
               </Button>
               <Button onClick={handleSave} disabled={error.length !== 0}>

@@ -75,7 +75,7 @@ export default function DeleteAccount() {
                     }}
                 >
                     <DialogTrigger asChild>
-                        <Button type='danger'>Eliminar cuenta</Button>
+                        <Button variant="danger">Eliminar cuenta</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -87,10 +87,10 @@ export default function DeleteAccount() {
                         </DialogHeader>
                         
                         <DialogFooter>
-                            <Button type="secondary" onClick={handleCancel}>
+                            <Button variant="alternative" onClick={handleCancel}>
                                 Cancelar
                             </Button>
-                            <Button type="danger" onClick={handleSave} >
+                            <Button variant="danger" onClick={handleSave} >
                                 Eliminar
                             </Button>
                         </DialogFooter>

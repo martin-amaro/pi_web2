@@ -43,82 +43,76 @@ export default function LoginForm() {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit} method='POST'>
-                <div className="space-y-6">
-                    <AuthInput
-                        label="Correo electrónico"
-                        name="email"
-                        type="text"
-                        action={(e) => setEmail(e.target.value)}
-                        disabled={false}
-                        placeholder="Enter email"
-                        error={errors.email}
-                        value={email}
-                    />
+      <>
+        <form onSubmit={handleSubmit} method="POST">
+          <div className="space-y-6">
+            <AuthInput
+              label="Correo electrónico"
+              name="email"
+              type="text"
+              action={(e) => setEmail(e.target.value)}
+              disabled={false}
+              placeholder="Enter email"
+              error={errors.email}
+              value={email}
+            />
 
-                    <AuthInput
-                        label="Contraseña"
-                        name="password"
-                        type="password"
-                        action={(e) => setPassword(e.target.value)}
-                        disabled={false}
-                        placeholder="Enter password"
-                        error={errors.password}
-                        value={password}
+            <AuthInput
+              label="Contraseña"
+              name="password"
+              type="password"
+              action={(e) => setPassword(e.target.value)}
+              disabled={false}
+              placeholder="Enter password"
+              error={errors.password}
+              value={password}
+            />
+          </div>
 
-                    />
+          {error && <AuthError message={error} />}
 
-                </div>
+          <div className="mt-12">
+            <Button
+              className="w-full my-0 flex justify-center transition-all"
+              disabled={loading}
+              buttonType="submit"
+            >
+              {loading ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                "Continuar"
+              )}
+            </Button>
+          </div>
+        </form>
+        <div>
+          <div className="flex justify-center gap-12 items-center my-5">
+            <span className="w-full border-t h-[1px] border-[#f3f3f3]"></span>
+            <span>O</span>
+            <span className="w-full border-t h-[1px] border-[#f3f3f3]"></span>
+          </div>
+          <Button
+            className="w-full my-0 gap-4 flex items-center justify-center transition-all"
+            variant="secondary"
+            disabled={loading}
+            buttonType="submit"
+            onClick={() => signIn("google")}
+          >
+            <img
+              className="size-6"
+              src="/images/google.svg"
+              alt="Google Logo"
+            />
+            Continuar con Google
+          </Button>
 
-                {error && <AuthError message={error} />}
-
-                <div className="mt-12">
-                    <Button
-                        className='w-full my-0 flex justify-center transition-all'
-                        disabled={loading}
-                        buttonType="submit"
-                    >
-                        {loading ? <LoaderCircle className='animate-spin' /> : "Continuar"}
-                    </Button>
-
-
-
-
-
-                </div>
-                
-            </form>
-            <div>
-                <div className="flex justify-center gap-12 items-center my-5">
-                    <span className='w-full border-t h-[1px] border-[#f3f3f3]'></span>
-                    <span>O</span>
-                    <span className='w-full border-t h-[1px] border-[#f3f3f3]'></span>
-
-
-                </div>
-                <Button
-                    className='w-full my-0 gap-4 flex items-center justify-center transition-all'
-                    type='secondary'
-                    disabled={loading}
-                    buttonType="submit"
-                    onClick={() => signIn("google")}
-                >
-                    <img
-                        className="size-6"
-                        src="/images/google.svg"
-                        alt="Google Logo"
-                    />
-                    Continuar con Google
-                </Button>
-
-                <p className="text-slate-800 text-base mt-6 text-center">
-                    ¿Nuevo en {APP_NAME}?
-                    <Button type='text' href="/register">Regístrate</Button>
-                </p>
-
-                
-            </div>
-        </>
-    )
+          <p className="text-slate-800 text-base mt-6 text-center">
+            ¿Nuevo en {APP_NAME}?
+            <Button variant="text" href="/register">
+              Regístrate
+            </Button>
+          </p>
+        </div>
+      </>
+    );
 }
