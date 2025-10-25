@@ -108,7 +108,7 @@ const MainDialog = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button type="text">Cambiar</Button>
+        <Button variant="text">Cambiar</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -136,7 +136,7 @@ const MainDialog = ({
           </div>
         </div>
         <DialogFooter>
-          <Button type="secondary" onClick={handleCancel}>
+          <Button variant="alternative" onClick={handleCancel}>
             Cancelar
           </Button>
           <Button onClick={() => handleSave(name)} disabled={!!error}>

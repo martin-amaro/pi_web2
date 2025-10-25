@@ -107,7 +107,7 @@ export default function UpdatePassword() {
                 >
                     <DialogTrigger asChild>
                         
-                        <Button type="text">Actualizar</Button>
+                        <Button variant="text">Actualizar</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -153,7 +153,7 @@ export default function UpdatePassword() {
 
                         </div>
                         <DialogFooter>
-                            <Button type="secondary" onClick={handleCancelOrClose}>
+                            <Button variant="alternative" onClick={handleCancelOrClose}>
                                 Cancelar
                             </Button>
                             <Button onClick={handleSave} disabled={!!error.password || !!error.newPassword}>

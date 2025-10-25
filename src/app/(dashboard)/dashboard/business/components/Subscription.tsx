@@ -19,7 +19,7 @@ export const Subscription = () => {
         </div>
       </div>
       <div className="mt-4 middle:mt-0 middle:ml-4 whitespace-nowrap gap-4 flex">
-        <Button type="text" href="/pricing">Cambiar</Button>
+        <Button variant="text" href="/pricing">Cambiar</Button>
       </div>
     </div>
   );

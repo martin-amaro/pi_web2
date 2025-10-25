@@ -136,7 +136,7 @@ export default function RegisterForm() {
         </div>
         <Button
           className="w-full my-0 gap-4 flex items-center justify-center transition-all"
-          type="secondary"
+          variant="secondary"
           disabled={loading}
           buttonType="submit"
           onClick={() => signIn("google")}

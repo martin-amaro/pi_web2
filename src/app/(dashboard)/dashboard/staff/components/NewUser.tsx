@@ -110,7 +110,7 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
       }}
     >
       <DialogTrigger onClick={() => setHash(generatePassword(6))} asChild>
-        <Button type="primary" className="flex h-10 items-center rounded-lg">
+        <Button variant="primary" className="flex h-10 items-center rounded-lg">
           <span className="hidden md:block">Nuevo empleado</span>{" "}
           <Plus className="md:ml-2" />
         </Button>
@@ -202,7 +202,7 @@ export default function NewUser({ onCreated }: { onCreated?: () => void }) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="secondary" onClick={handleClose}>
+          <Button variant="alternative" onClick={handleClose}>
             Cancelar
           </Button>
           <Button

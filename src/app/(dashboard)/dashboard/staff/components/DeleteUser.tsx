@@ -96,10 +96,10 @@ const MainDialog = ({
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="secondary" onClick={handleCancel}>
+          <Button variant="alternative" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button type="danger" className="w-26 flex justify-center" onClick={handleSave} loading={loading}>
+          <Button variant="danger" className="w-26 flex justify-center" onClick={handleSave} loading={loading}>
             Eliminar
           </Button>
         </DialogFooter>

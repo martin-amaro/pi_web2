@@ -1,12 +1,18 @@
-export interface ButtonProps {
-    children: React.ReactNode;
-    type?: "primary" | "secondary" | "danger" | "outline" | "text";
-    className?: string;
-    href?: string;
-    disabled?: boolean;
-    onClick?: () => void;
-    loading?: boolean;
-    buttonType?: "button" | "submit" | "reset";
+import React from "react";
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  variant?:
+    | "primary"
+    | "secondary"
+    | "danger"
+    | "outline"
+    | "text"
+    | "alternative";
+  href?: string;
+  loading?: boolean;
+  buttonType?: "button" | "submit" | "reset";
 }
 
 export interface CategoryItem {
