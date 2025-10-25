@@ -108,7 +108,7 @@ export const PlanCard = ({
           // href={plan.buttonLink}
           onClick={() => handleClick(plan.id)}
           loading={loading}
-          type={session?.user.plan?.name === plan.id ? "outline" : "primary"}
+          variant={session?.user.plan?.name === plan.id ? "outline" : "primary"}
           className={clsx(
             "btn-main w-full text-center h-12",
             "disabled:opacity-100!",

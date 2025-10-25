@@ -21,17 +21,32 @@ type Business = {
   // ...otros campos
 };
 
+interface CategoryProps {
+  active: boolean;
+  description?: string;
+  id: number;
+  name: string;
+}
+
 type BusinessContextType = {
   business: Business | null;
   loading: boolean;
   refreshBusiness: () => Promise<void>;
-  getBusinessProp: (prop: keyof Business) => string | number | undefined;};
+  getBusinessProp: (prop: keyof Business) => string | number | undefined;
+  categories: CategoryProps[];
+  setCategories: (categories: CategoryProps[]) => void;
+  getCategories: () => Promise<void>;
+};
+
 
 const BusinessContext = createContext<BusinessContextType>({
   business: null,
   loading: false,
   refreshBusiness: async () => {},
-  getBusinessProp: () => '',
+  getBusinessProp: () => "",
+  categories: [],
+  setCategories: () => {},
+  getCategories: async () => {}
 });
 
 export const BusinessProvider = ({
@@ -42,6 +57,8 @@ export const BusinessProvider = ({
   const { data: session } = useSession();
   const [business, setBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
+  const token = session?.user?.accessToken;
 
   const { request, error } = useBackend();
 
@@ -53,7 +70,10 @@ export const BusinessProvider = ({
 
     setLoading(true);
     try {
-      const data = await request("/business/me", { method: "POST", token: session.user.accessToken, });
+      const data = await request("/business/me", {
+        method: "POST",
+        token: session.user.accessToken,
+      });
       setBusiness(data);
       console.log("Fetched business data:", data);
     } catch (err) {
@@ -64,27 +84,41 @@ export const BusinessProvider = ({
   };
 
   const getBusinessProp = (prop: keyof Business) => {
-    return business ? business[prop] : '';
-  }
+    return business ? business[prop] : "";
+  };
+
+
+  const getCategories = async () => {
+    if (!token) return;
+    try {
+      const data = await request("/categories", { token });
+      setCategories(data);
+    }
+    catch (error) {
+      console.error("Error fetching categories", error);
+    }
+  };
 
   useEffect(() => {
     fetchBusiness();
+    getCategories();
+
   }, []);
   // session
 
+ 
   const value = {
     business,
     loading,
     refreshBusiness: fetchBusiness,
     getBusinessProp: (prop: keyof Business) => getBusinessProp(prop),
+    categories, setCategories, getCategories
   };
 
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
 
   return (
-    <BusinessContext.Provider
-      value={value}
-    >
+    <BusinessContext.Provider value={value}>
       {children}
     </BusinessContext.Provider>
   );

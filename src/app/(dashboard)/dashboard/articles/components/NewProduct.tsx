@@ -34,6 +34,7 @@ import { ROLE_INFO, ROLES } from "@/app/constants/roles";
 import {
   Check,
   Copy,
+  Folder,
   ImageUp,
   Info,
   Plus,
@@ -49,15 +50,23 @@ import Title from "../../components/Title";
 import { articleTypes } from "@/app/constants/articles";
 import { Textarea } from "@/components/ui/textarea";
 import { UpdateCategory } from "./UpdateCategory";
+import { generateDescriptionForProduct } from "@/app/utils/ai";
+import { getPlanName } from "@/app/utils/plans";
+import { getCategoryName } from "@/app/utils/business";
+import { useBusiness } from "@/app/context/BusinessContext";
+import { NewCategory } from "./NewCategory";
 
 export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
   const { data: session, status, update } = useSession();
   const { request } = useBackend();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [hash, setHash] = useState("");
   const [error, setError] = useState<Record<string, string>>({});
-  const token = (session?.user as any)?.accessToken;
+  const token = session?.user?.accessToken;
+
+  const [loading, setLoading] = useState(false);
+  const [loadingAI, setLoadingAI] = useState(false);
+
 
   // Data
   const [name, setName] = useState("");
@@ -65,22 +74,25 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
   const [type, setType] = useState("");
   const [price, setPrice] = useState(0);
   const [images, setImages] = useState<File[]>([]);
+  const [category, setCategory] = useState("0");
 
   const handleSave = async () => {
     // showMessage("Correo actualizado con éxito", "success");
+
+    const categoryId = category !== "0" ? parseInt(category) : null;
 
     try {
       setLoading(true);
 
       const formData = new FormData();
-      
+
       const productData = {
         name,
         description,
         type,
         price,
-        categoryId: null,
-        stock: 3
+        categoryId,
+        stock: 3,
       };
 
       formData.append(
@@ -95,7 +107,6 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         data: formData,
         token,
       });
-
 
       //   const res = await createUserAction({
       //     name,
@@ -113,7 +124,7 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
           break;
         case 401:
           toast.error(
-            "No tienes permisos suficientes para realizar esta acción.", 
+            "No tienes permisos suficientes para realizar esta acción."
           );
           break;
         default:
@@ -133,6 +144,19 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
     setType("");
     setPrice(0);
     setDescription("");
+    setCategory("0");
+  };
+
+  const handleGenerateAI = async () => {
+    setLoadingAI(true);
+    try {
+      const desc = await generateDescriptionForProduct(name);
+      setDescription(desc);
+    } catch (error) {
+      toast.error("Error al generar la descripción con IA.");
+    } finally {
+      setLoadingAI(false);
+    }
   };
 
   useEffect(() => {
@@ -175,23 +199,36 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
                 <ItemName val={name} set={setName} />
                 <ItemType val={type} set={setType} />
               </div>
-              <ItemThumb />
+              <ItemThumb images={images}/>
+              
             </div>
             <div className="mt-6 grid gap-3">
               <ItemDesc val={description} set={setDescription} />
-              <ItemImages val={images} set={setImages}/>
+              <div>
+                <Button
+                  variant="alternative"
+                  className="p-2! text-sm! flex gap-2 h-auto!"
+                  onClick={handleGenerateAI}
+                  disabled={name.trim() === "" || loading || loadingAI}
+                >
+                  <Sparkle className="size-4" />
+                  {loadingAI ? "Generando..." : "Generar descripción con IA"}
+                </Button>
+              </div>
+              <ItemImages val={images} set={setImages} />
             </div>
 
-            <div className="w-full h-2 bg-[#f2f2f2] my-8"></div>
+            <Sep />
             <Title msg="Categorización" />
             <p>
               Asigna categorías a este artículo para facilitar su búsqueda y
               organización.
             </p>
-            <div>
-              <UpdateCategory />
+            <div className="">
+              <ItemCategory val={category} set={setCategory} />
             </div>
 
+            <Sep />
             <div>
               <Title msg="Opciones" />
               <p>
@@ -264,12 +301,19 @@ const ItemType = ({ val, set }: { val: string; set: (v: string) => void }) => {
   );
 };
 
-const ItemThumb = () => {
+const ItemThumb = ({images} : {images: any[]}) => {
   return (
     <div className="w-[30%] grid gap-3">
       <Label htmlFor="pass-3">Presentación</Label>
-      <div className="border border-[#d1d5dc] rounded-sm w-full h-32">
-        <div className="w-full h-[80%]"></div>
+      <div className="border border-[#d1d5dc] rounded-sm w-full h-32 overflow-hidden">
+        <div className="w-full h-[80%] ">
+          {images.length > 0 && (
+            <img
+              src={URL.createObjectURL(images[0])}
+              className="object-cover w-full h-full"
+            />
+          )}
+        </div>
         <div className="w-full h-[20%]">
           <Button variant="text">Cambiar</Button>
         </div>
@@ -278,10 +322,9 @@ const ItemThumb = () => {
   );
 };
 
-const ItemDesc = ({ val, set }: { val: string, set: (v: string) => void }) => {
+const ItemDesc = ({ val, set }: { val: string; set: (v: string) => void }) => {
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
-  const [focusInside, setFocusInside] = useState(false);
 
   useEffect(() => {
     setError(validateText(val, "La descripción"));
@@ -290,55 +333,36 @@ const ItemDesc = ({ val, set }: { val: string, set: (v: string) => void }) => {
   return (
     <div className="grid gap-3">
       <Label htmlFor="pass-3">Descripción</Label>
-      <div
-        className="relative"
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => {
-          if (!focusInside) setShow(false);
-        }}
-      >
+      <div className="relative">
         <Textarea
           className="w-full resize-none max-h-[200px]!"
           id="name"
           name="name"
           maxLength={255}
-          onFocus={() => {
-            setShow(true);
-            setFocusInside(true);
-          }}
-          onBlur={() => {
-            setFocusInside(false);
-            setShow(false);
-          }}
           autoComplete="off"
           value={val}
           onChange={(e) => set(e.target.value)}
           placeholder="Describe el producto aquí"
           required
         />
-        {show && (
-          <Button
-            variant="alternative"
-            className="absolute right-6 bottom-2 p-2! text-sm! flex gap-2 h-auto!"
-            onMouseDown={(e) => {
-              e.preventDefault(); // evita perder el foco antes de hacer clic
-              alert("hola");
-            }}
-          >
-            <Sparkle className="size-4" />
-            Generar con IA
-          </Button>
-        )}
       </div>
       {error && <InputError message={error} />}
     </div>
   );
 };
 
-const ItemImages = ({ val, set }: { val: File[]; set: React.Dispatch<React.SetStateAction<File[]>> }) => {
+const ItemImages = ({
+  val,
+  set,
+}: {
+  val: File[];
+  set: React.Dispatch<React.SetStateAction<File[]>>;
+}) => {
   // const [images, setImages] = useState<File[]>([]);
   const [dragOver, setDragOver] = useState(false);
-  const MAX_IMAGES = 4;
+  const { data: session } = useSession();
+  const plan = session?.user?.plan?.name;
+  const MAX_IMAGES = plan === "free" ? 1 : plan === "pro" ? 4 : 20;
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -348,7 +372,11 @@ const ItemImages = ({ val, set }: { val: File[]; set: React.Dispatch<React.SetSt
     );
 
     if (val.length + files.length > MAX_IMAGES) {
-      toast.error(`Solo puedes subir hasta ${MAX_IMAGES} imágenes.`);
+      toast.error(
+        `Solo puedes subir hasta ${MAX_IMAGES} imágenes con el plan ${getPlanName(
+          session?.user?.plan?.name
+        )}.`
+      );
       return;
     }
 
@@ -361,7 +389,11 @@ const ItemImages = ({ val, set }: { val: File[]; set: React.Dispatch<React.SetSt
     );
 
     if (val.length + files.length > MAX_IMAGES) {
-      toast.error(`Solo puedes subir hasta ${MAX_IMAGES} imágenes.`);
+      toast.error(
+        `Solo puedes subir hasta ${MAX_IMAGES} imágenes con el plan ${getPlanName(
+          session?.user?.plan?.name
+        )}.`
+      );
       //return;
     }
 
@@ -545,3 +577,39 @@ function ItemPrice({
     </div>
   );
 }
+
+const ItemCategory = ({val, set}: {val: string, set: (v: string) => void}) => {
+  const [open, setOpen] = useState(false);
+  const [openNw, setOpenNw] = useState(false);
+  const { categories } = useBusiness();
+
+
+  const handleSave = async (name?: string) => {};
+
+  return (
+    <div className="mt-8 border-b border-gray-200 pb-4 flex flex-col middle:flex-row middle:items-center justify-between">
+      <div className="space-y-1">
+        <div className="flex gap-2 ">
+          <Folder />
+          <label className="font-medium text-base text-slate-800 mb-1 block">
+            Categoría
+          </label>
+        </div>
+        <div className="flex items-center gap-2">
+          <p className="text-neutral-500 text-sm">
+            {getCategoryName(categories, val)}
+          </p>
+        </div>
+      </div>
+      <div className="mt-4 middle:mt-0 middle:ml-4 whitespace-nowrap gap-1 flex">
+        <NewCategory open={open} setOpen={setOpen} val={val} set={set} />
+        <span className="border-l"></span>
+        <UpdateCategory open={openNw} setOpen={setOpenNw} val={val} set={set} />
+      </div>
+    </div>
+  );
+};
+
+const Sep = () => (
+  <div className="w-full h-2 bg-[#f2f2f2] my-8"></div>
+)

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -8,29 +8,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useBusiness } from "@/app/context/BusinessContext";
 
 export const Categories = () => {
+  const { categories } = useBusiness();
+  const [category, setCategory] = useState("all");
+
   return (
-    <Select value={"all"} onValueChange={() => {}} >
+    <Select value={category} onValueChange={setCategory}>
       <SelectTrigger className="w-50 h-10! font-[400] text-black">
         <SelectValue placeholder="Selecciona un tipo" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           {/* <SelectLabel>Fruits</SelectLabel> */}
-          {/* {Object.entries(BusinessType).map(([key, value]) => (
-            <SelectItem key={key} value={key}>
-              <div className="flex items-center gap-2 ">
-                {value[1]} {value[0]}
-              </div>
-            </SelectItem>
-          ))} */}
 
-          <SelectItem  value={"all"}>
-            <div className="flex items-center gap-2 ">
-              Todas las categorías
-            </div>
+          <SelectItem value={"all"}>
+            <div className="flex items-center gap-2 ">Todas las categorías</div>
           </SelectItem>
+
+          {categories.map((item) => (
+            <SelectItem key={item.id} value={item.id.toString()}>
+              <div className="flex items-center gap-2 ">{item.name}</div>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
