@@ -8,3 +8,12 @@ export const generatePassword = (len: number) => {
   }
   return hash;
 };
+
+export const formatCurrency = (amount: number, locale = 'es-CO', currency = 'COP') => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
