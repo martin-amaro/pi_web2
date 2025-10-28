@@ -43,7 +43,7 @@ const Item = () => {
           <input
             id="checkbox-row"
             type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
+            className="w-6! h-6! text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
           />
           <div className="flex justify-center items-center size-9 rounded-sm bg-[#f2f2f2] text-[#d9d9d9]">
             <Image className="size-5" />

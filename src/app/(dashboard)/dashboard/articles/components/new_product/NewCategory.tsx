@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,34 +16,42 @@ import { useBackend } from "@/app/hooks/useBackend";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useBusiness } from "@/app/context/BusinessContext";
+import { validateText } from "@/app/utils/auth";
+import { Checkbox } from "@/app/components/Checkbox";
+import { InputError } from "../../../components/InputError";
+import { useProductStore } from "./store";
 
 export const NewCategory = ({
   open,
   setOpen,
-  val,
-  set,
 }: {
   open: boolean;
   setOpen: (v: boolean) => void;
-  val: string;
-  set: (v: string) => void;
 }) => {
-  const { data: session, status, update } = useSession();
+  const { data: session } = useSession();
+  const { category, setCategory } = useProductStore();
   const token = session?.user?.accessToken;
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [name, setName] = useState("");
+  const [select, setSelect] = useState(true);
   const { request } = useBackend();
   const { getCategories } = useBusiness();
 
+  useEffect(() => {
+    setError(validateText(name, "El nombre"));
+  }, [name]);
+
   const handleCancel = () => {
     setName("");
+    setSelect(true);
     setOpen(false);
   };
 
   const handleSave = async () => {
     setOpen(false);
     try {
-      await request("/categories", {
+      const response = await request("/categories", {
         method: "POST",
         data: {
           name,
@@ -52,8 +60,12 @@ export const NewCategory = ({
       });
       await getCategories();
       toast.success(`Categoría "${name}" creada.`);
+      if (select) setCategory(String(response.id));
+
     } catch (e) {
       toast.error("No se pudo crear la categoría.");
+    } finally {
+      handleCancel();
     }
   };
 
@@ -80,11 +92,8 @@ export const NewCategory = ({
         </DialogHeader>
         <div className="grid gap-6">
           <div className="grid gap-3">
-            <Label htmlFor="name-1">Nombre de la categoría</Label>
+            <Label>Nombre de la categoría</Label>
             <Input
-              id="name-1"
-              name="name"
-              type="text"
               maxLength={50}
               autoComplete="off"
               spellCheck={false}
@@ -92,18 +101,19 @@ export const NewCategory = ({
               onChange={(e) => setName(e.target.value)}
               required
             />
-
-            {/* {error && <InputError message={error} />} */}
+            {error && <InputError message={error} />}
           </div>
+          <Checkbox
+            label="Seleccionar automáticamente"
+            checked={select}
+            onCheckedChange={(e) => setSelect(e === true)}
+          />
         </div>
         <DialogFooter>
           <Button variant="alternative" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button
-            onClick={handleSave}
-            // disabled={!industry || industry === getBusinessProp("industry")}
-          >
+          <Button onClick={handleSave} disabled={error !== ""}>
             Guardar
           </Button>
         </DialogFooter>

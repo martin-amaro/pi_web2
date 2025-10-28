@@ -9,6 +9,7 @@ export interface ButtonProps
     | "danger"
     | "outline"
     | "text"
+    | "circle"
     | "alternative";
   href?: string;
   loading?: boolean;
@@ -33,3 +34,17 @@ export interface AuthInputProps {
     placeholder?: string;
     error?: string | undefined;
 }
+
+export interface Article {
+  id: string;
+  name: string;
+  categoryId: string;
+  price: number;
+  stock: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  description?: string;
+  thumbnailUrl?: string | null;
+  imageUrls?: string[];
+};

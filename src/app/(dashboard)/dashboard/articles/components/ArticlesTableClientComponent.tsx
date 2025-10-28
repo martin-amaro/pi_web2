@@ -1,26 +1,20 @@
 "use client";
+import { Checkbox } from "@/app/components/Checkbox";
 import { useBusiness } from "@/app/context/BusinessContext";
+import { Article } from "@/app/libs/definitions";
 import { getCategoryName } from "@/app/utils/business";
 import { formatCurrency } from "@/app/utils/misc";
-import { Ellipsis, Image } from "lucide-react";
+import clsx from "clsx";
+import { Check, Ellipsis, Image } from "lucide-react";
 import { useState, useEffect } from "react";
-
-type Article = {
-  id: string;
-  name: string;
-  categoryId: string;
-  price: number;
-  stock: number;
-};
+import { useProductStore } from "./new_product/store";
 
 type Props = {
   initialArticles: Article[];
-  categories: string[];
 };
 
 export default function ArticlesTableClientComponent({
   initialArticles,
-  categories,
 }: Props) {
   const [articles, setArticles] = useState<Article[]>(initialArticles);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -69,17 +63,12 @@ export default function ArticlesTableClientComponent({
   return (
     <div className="rounded-lg md:pt-0 overflow-x-auto">
       <table className="w-full text-sm text-left text-gray-500 table-fixed mt-6 font-normal!">
-        <thead className="text-[.8rem] text-gray-700 font-normal! border-b border-[#b3b3b3] bg-gray-50">
+        <thead className="text-[.8rem] text-gray-700 font-normal! border-b border-[#b3b3b3] bg-gray-50 rounded-lg">
           <tr className="">
             <th className="w-[30%] px-6 py-3">
               <div className="flex items-center gap-3">
-               
-                <input
-                type="checkbox"
-                checked={selectAll}
-                onChange={toggleSelectAll}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
-              />
+                
+                <Checkbox checked={selectAll} onCheckedChange={toggleSelectAll} />
                 <span>Nombre</span>
               </div>
             </th>
@@ -93,38 +82,83 @@ export default function ArticlesTableClientComponent({
 
         <tbody>
           {articles.map((article) => (
-            <Item key={article.id} article={article} toggle={toggleSelectOne} selectedIds={selectedIds} />
+            <Item
+              key={article.id}
+              article={article}
+              toggle={toggleSelectOne}
+              selectedIds={selectedIds}
+            />
           ))}
         </tbody>
       </table>
+
+      {selectedIds.size > 0 && (
+        <div className="flex items-center bg-white drop-shadow-2xl drop-shadow-black/20 w-full h-20 absolute left-0 bottom-0 px-7">
+          <div>
+            <span className="font-medium text-sm">
+              {selectedIds.size} producto(s) seleccionado(s)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-const Item = ({article, toggle, selectedIds}: {article: Article, toggle: (id: string) => void, selectedIds: Set<string>}) => {
+const Item = ({
+  article,
+  toggle,
+  selectedIds,
+  className = "",
+}: {
+  article: Article;
+  toggle: (id: string) => void;
+  selectedIds: Set<string>;
+  className?: string;
+}) => {
   const { categories } = useBusiness();
   return (
-    <tr className="border-b border-[#f2f2f2] hover:bg-[#e6f0ff] h-14 text-[#1a1a1a] cursor-pointer">
+    <tr
+      className={clsx(
+        "border-b border-[#f2f2f2] hover:bg-[#e6f0ff] h-14 text-[#1a1a1a] cursor-pointer last:border-none",
+        article.active ? "" : "opacity-60",
+        className
+      )}
+    >
       <td className="px-6">
         <div className="flex items-center gap-3">
-          <input
-            id="checkbox-row"
-            type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
+          <Checkbox
             checked={selectedIds.has(article.id)}
-            onChange={() => toggle(article.id)}
+            onCheckedChange={() => toggle(article.id)}
           />
-          <div className="flex justify-center items-center size-9 rounded-sm bg-[#f2f2f2] text-[#d9d9d9]">
-            <Image className="size-5" />
+
+          <div className="flex justify-center items-center size-9 rounded-sm bg-[#f2f2f2] text-[#d9d9d9] overflow-hidden">
+            {article.thumbnailUrl ? (
+              <img src={article.thumbnailUrl} alt={article.name} className="" />
+            ) : (
+              <Image className="size-5" />
+            )}
           </div>
-          <span>{article.name}</span>
+          <span className="font-medium text-neutral-700">{article.name}</span>
         </div>
       </td>
-      <td className="px-6">{getCategoryName(categories, article.categoryId)}</td>
-      <td className="px-6 text-green-700 font-medium">Disponible</td>
+      <td className="px-6">
+        {getCategoryName(categories, article.categoryId)}
+      </td>
+      <td
+        className={clsx(
+          "px-6 font-medium",
+          article.active ? "text-green-700" : "text-red-500"
+        )}
+      >
+        {article.active ? "Disponible" : "No disponible"}
+      </td>
       <td className="px-6">{formatCurrency(article.price)}</td>
       <td className="px-6">{article.stock}</td>
-      <td className="px-6 text-right">
+      <td
+        className="px-6 text-right"
+        onClick={() => useProductStore.getState().setProduct(article)}
+      >
         <Ellipsis className="text-gray-400 hover:text-gray-600 transition-colors" />
       </td>
     </tr>

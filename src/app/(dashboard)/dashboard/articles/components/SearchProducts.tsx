@@ -31,6 +31,7 @@ export const SearchProducts = ({ placeholder }: { placeholder: string }) => {
       <input
         className="peer block   py-[9px] pl-10  text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-0"
         placeholder={placeholder}
+        type="search"
         onChange={(event) => handleSearch(event.target.value)}
         defaultValue={searchParams.get("query")?.toString()}
         autoComplete={"off"}

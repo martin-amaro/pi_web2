@@ -29,7 +29,7 @@ export const planDetails = [
     name: "Professional",
     id: "pro",
     description: "Ideal para negocios en crecimiento",
-    price: "$29.99",
+    price: "COP $150,000.00",
     period: "/mes",
     features: [
       { name: "Productos ilimitados", included: true },
@@ -49,7 +49,7 @@ export const planDetails = [
     name: "Enterprise",
     id: "ultra",
     description: "Para grandes empresas con necesidades específicas",
-    price: "$99.99",
+    price: "COP $385,000.00",
     period: "/mes",
     features: [
       { name: "Todo lo de Professional", included: true },

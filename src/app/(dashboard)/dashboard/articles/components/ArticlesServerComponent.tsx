@@ -1,24 +1,40 @@
-import useAuth from '@/app/hooks/useAuth'
-import { backendRequest } from '@/app/hooks/useBackendServer'
-import { auth } from '@/auth'
-import React from 'react'
-import ArticlesTableClientComponent from './ArticlesTableClientComponent'
-import { useBusiness } from '@/app/context/BusinessContext'
-import { SearchProducts } from './SearchProducts'
-import { Categories } from './Categories'
-import NewProduct from './NewProduct'
-import Button from '@/app/ui/Button'
+import useAuth from "@/app/hooks/useAuth";
+import { backendRequest } from "@/app/hooks/useBackendServer";
+import { auth } from "@/auth";
+import React from "react";
+import ArticlesTableClientComponent from "./ArticlesTableClientComponent";
+import { useBusiness } from "@/app/context/BusinessContext";
+import { SearchProducts } from "./SearchProducts";
+import { Categories } from "./Categories";
+import NewProduct from "./new_product/NewProduct";
+import Button from "@/app/ui/Button";
+import { Article } from "@/app/libs/definitions";
+import { NoArticles } from "./NoArticles";
+import { NoResultsArticles } from "./NoResultsArticles";
 
-export const ArticlesServerComponent = async ({ search, category }: { search: string, category: string }) => {
-
+export const ArticlesServerComponent = async ({
+  search,
+  category,
+}: {
+  search: string;
+  category: string;
+}) => {
   const session = await auth();
   const token = session?.user?.accessToken;
-  const categories = await backendRequest('/categories', { token });
-  const request = await backendRequest(`/api/products/search?query=${search}`, { token });
-  const products = request?.content || [];
+  let products:Article[] = [];
+  try {
+    const request = await backendRequest(
+      `/api/products/search?query=${search}&category=${category}`,
+      { token }
+    );
+    products = request?.content || [];
+    console.log(products)
+  } catch (e) {
+    products = [];
+  }
 
   return (
-    <>
+    <div>
       <div className="flex justify-between items-center">
         <div className="flex justify-baseline items-center gap-2 ">
           <SearchProducts placeholder="Buscar" />
@@ -29,10 +45,14 @@ export const ArticlesServerComponent = async ({ search, category }: { search: st
           <NewProduct />
         </div>
       </div>
-      <ArticlesTableClientComponent
-        initialArticles={products}
-        categories={categories}
-      />
-    </>
+      {
+        products.length ? (
+          <ArticlesTableClientComponent initialArticles={products} />
+        ) : category || search ? 
+          <NoResultsArticles/>
+          : 
+          <NoArticles />
+      }
+    </div>
   );
-}
+};
