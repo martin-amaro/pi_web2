@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NewCategory } from './NewCategory';
 import { UpdateCategory } from './UpdateCategory';
-import { useProductStore } from './store';
+import { useProductStore } from '../../../../../stores/product';
 import { useBusiness } from '@/app/context/BusinessContext';
 import { Folder } from 'lucide-react';
 import { getCategoryName } from '@/app/utils/business';

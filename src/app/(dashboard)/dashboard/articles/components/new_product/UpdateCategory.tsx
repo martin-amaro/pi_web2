@@ -22,7 +22,7 @@ import {
 
 import { useBusiness } from "@/app/context/BusinessContext";
 import { Separator } from "@/components/ui/separator";
-import { useProductStore } from "./store";
+import { useProductStore } from "../../../../../stores/product";
 
 export const UpdateCategory = ({
   open,

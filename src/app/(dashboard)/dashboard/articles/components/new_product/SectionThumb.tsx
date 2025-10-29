@@ -1,5 +1,5 @@
 import React from 'react'
-import { useProductStore } from './store';
+import { useProductStore } from '../../../../../stores/product';
 import { Label } from '@/components/ui/label';
 import Button from '@/app/ui/Button';
 
@@ -13,7 +13,10 @@ export const SectionThumb = () => {
           <div className="w-full h-[80%] ">
             {images.length > 0 && (
               <img
-                src={URL.createObjectURL(images[thumb])}
+                
+                src={
+                  typeof images[thumb] === "string" ? images[thumb] : URL.createObjectURL(images[thumb])
+                }
                 className="object-cover w-full h-full"
               />
             )}

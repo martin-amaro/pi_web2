@@ -38,6 +38,7 @@ export function useBackend() {
       };
 
       const res = await axios.request(config);
+      
       return res.data;
     } catch (err: any) {
       setError(err.message);

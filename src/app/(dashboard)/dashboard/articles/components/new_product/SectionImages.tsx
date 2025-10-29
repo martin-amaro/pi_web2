@@ -1,20 +1,27 @@
-import React, { useState } from 'react'
-import { useProductStore } from './store';
-import { useSession } from 'next-auth/react';
-import { toast } from 'sonner';
-import { getPlanName } from '@/app/utils/plans';
-import clsx from 'clsx';
-import Button from '@/app/ui/Button';
-import { ImageUp, Star, X } from 'lucide-react';
+import React, { useState } from "react";
+import { useProductStore } from "../../../../../stores/product";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { getPlanName } from "@/app/utils/plans";
+import clsx from "clsx";
+import Button from "@/app/ui/Button";
+import { ImageUp, Star, X } from "lucide-react";
 
 export const SectionImages = () => {
-  const { images, setImages, thumb, setThumb, productId, removedImages} = useProductStore();
+  const {
+    images,
+    thumb,
+    setThumb,
+    addNewImage,
+    removeImage,
+    productId,
+    removedImages,
+  } = useProductStore();
+
   const [dragOver, setDragOver] = useState(false);
   const { data: session } = useSession();
   const plan = session?.user?.plan?.name;
   const MAX_IMAGES = plan === "free" ? 1 : plan === "pro" ? 4 : 20;
-  const isEditing = !!productId;
-
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -32,7 +39,7 @@ export const SectionImages = () => {
       return;
     }
 
-    setImages([...images, ...files].slice(0, MAX_IMAGES));
+    files.forEach((file) => addNewImage(file));
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,23 +53,16 @@ export const SectionImages = () => {
           session?.user?.plan?.name
         )}.`
       );
-      //return;
     }
 
-    setImages([...images, ...files].slice(0, MAX_IMAGES));
+    files
+      .slice(0, MAX_IMAGES - images.length)
+      .forEach((file) => addNewImage(file));
     e.target.value = "";
   };
 
   const handleRemove = (index: number) => {
-    const removed = images[index];
-    
-    if (isEditing && typeof removed === "string") {
-      // addRemovedImage(removed);
-      console.log("Marcada para eliminar:", removed);
-    }
-
-    setImages(images.filter((_, i) => i !== index));
-    if (index === thumb) setThumb(0);
+    removeImage(index);
   };
 
   const handleMark = (index: number) => {
@@ -70,7 +70,7 @@ export const SectionImages = () => {
   };
 
   return (
-    <div className="mt-6 ounded-sm">
+    <div className="mt-6">
       {/* Zona Droppable */}
       <div
         className={clsx(
@@ -86,8 +86,6 @@ export const SectionImages = () => {
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
       >
-        {"DEL"}
-        {JSON.stringify(removedImages)}
         <ImageUp className="size-5 text-gray-500" />
         <p className="text-gray-600 text-center">
           Arrastra y suelta imágenes aquí o
@@ -106,11 +104,15 @@ export const SectionImages = () => {
           className="hidden"
           onChange={handleSelect}
         />
+
+        <div className="text-xs mt-2 text-gray-500">
+          Eliminadas: {removedImages.length}
+          Thumb: {thumb}
+        </div>
       </div>
 
       {/* Previsualización */}
       {images.length > 0 && (
-        //  grid grid-cols-8
         <div className="mt-4 flex flex-wrap gap-3">
           {images.map((file, index) => (
             <div
@@ -121,7 +123,9 @@ export const SectionImages = () => {
               )}
             >
               <img
-                src={typeof file === "string" ? file : URL.createObjectURL(file)}
+                src={
+                  typeof file === "string" ? file : URL.createObjectURL(file)
+                }
                 alt={`preview-${index}`}
                 className="object-cover w-full h-full"
               />
@@ -130,7 +134,6 @@ export const SectionImages = () => {
                 {index !== thumb && (
                   <Button
                     variant="circle"
-                    className="!"
                     title="Marcar como imagen principal"
                     onClick={() => handleMark(index)}
                   >
@@ -141,7 +144,6 @@ export const SectionImages = () => {
                 <Button
                   variant="circle"
                   title="Eliminar imagen"
-                  className=""
                   onClick={() => handleRemove(index)}
                 >
                   <X className="size-4" />
@@ -153,4 +155,4 @@ export const SectionImages = () => {
       )}
     </div>
   );
-}
+};

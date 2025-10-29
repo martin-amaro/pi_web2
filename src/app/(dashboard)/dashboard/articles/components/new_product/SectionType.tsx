@@ -1,5 +1,5 @@
 import React from 'react'
-import { useProductStore } from './store';
+import { useProductStore } from '../../../../../stores/product';
 import { Label } from '@/components/ui/label';
 import {
   Select,

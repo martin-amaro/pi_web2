@@ -19,7 +19,7 @@ import { Plus } from "lucide-react";
 import { useBackend } from "@/app/hooks/useBackend";
 import Title from "../../../components/Title";
 import { useRouter } from "next/navigation";
-import { useProductStore } from "./store";
+import { useProductStore } from "../../../../../stores/product";
 import { SectionName } from "./SectionName";
 import { SectionType } from "./SectionType";
 import { SectionDescription } from "./SectionDescription";
@@ -40,6 +40,7 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
     open,
     setOpen,
     name,
+    active,
     setName,
     description,
     setDescription,
@@ -48,7 +49,6 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
     price,
     setPrice,
     images,
-    setImages,
     thumb,
     setThumb,
     category,
@@ -91,7 +91,8 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         categoryId,
         stock: 3,
         thumbIndex: thumb,
-        removedImages
+        removedImages,
+        active
       };
 
       formData.append(
@@ -99,7 +100,12 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         new Blob([JSON.stringify(productData)], { type: "application/json" })
       );
 
-      images.forEach((file) => formData.append("images", file));
+      // images.forEach((file) => formData.append("images", file));
+
+      useProductStore
+        .getState()
+        .newImages.forEach((file) => formData.append("newImages", file));
+
 
       const method = useProductStore.getState().productId ? "PUT" : "POST";
       const endpoint = useProductStore.getState().productId
@@ -112,8 +118,14 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         token,
       });
 
+      
       setOpen(false);
-      toast.success("Artículo creado correctamente.", {});
+      toast.success(
+        useProductStore.getState().productId
+          ? "Artículo actualizado correctamente"
+          : "Artículo creado correctamente",
+        {}
+      );
       handleClose();
       router.refresh();
     } catch (err: any) {

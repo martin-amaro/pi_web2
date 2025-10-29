@@ -7,7 +7,7 @@ import { formatCurrency } from "@/app/utils/misc";
 import clsx from "clsx";
 import { Check, Ellipsis, Image } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useProductStore } from "./new_product/store";
+import { useProductStore } from "../../../../stores/product";
 
 type Props = {
   initialArticles: Article[];

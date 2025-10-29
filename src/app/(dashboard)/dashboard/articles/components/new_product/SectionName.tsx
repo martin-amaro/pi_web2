@@ -1,5 +1,5 @@
 import React from "react";
-import { useProductStore } from "./store";
+import { useProductStore } from "../../../../../stores/product";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { InputError } from "../../../components/InputError";

@@ -19,7 +19,7 @@ import { useBusiness } from "@/app/context/BusinessContext";
 import { validateText } from "@/app/utils/auth";
 import { Checkbox } from "@/app/components/Checkbox";
 import { InputError } from "../../../components/InputError";
-import { useProductStore } from "./store";
+import { useProductStore } from "../../../../../stores/product";
 
 export const NewCategory = ({
   open,
