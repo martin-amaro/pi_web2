@@ -17,8 +17,10 @@ type ProductStore = {
   loading: boolean;
   loadingAI: boolean;
   error: Record<string, string>;
+  preview: boolean;
 
   setOpen: (v: boolean) => void;
+  setPreview: (v: boolean) => void;
   setName: (v: string) => void;
   setDescription: (v: string) => void;
   setType: (v: string) => void;
@@ -32,13 +34,14 @@ type ProductStore = {
 
   addNewImage: (file: File) => void;
   removeImage: (index: number) => void;
-  setProduct: (product: Article) => void;
+  setProduct: (product: Article, preview?: boolean) => void;
   reset: () => void;
 };
 
 export const useProductStore = create<ProductStore>((set, get) => ({
   productId: undefined,
   open: false,
+  preview: false,
   name: "",
   description: "",
   type: "",
@@ -54,6 +57,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   error: {},
 
   setOpen: (v) => set({ open: v }),
+  setPreview: (v) => set({ preview: v }),
   setName: (v) => set({ name: v }),
   setDescription: (v) => set({ description: v }),
   setType: (v) => set({ type: v }),
@@ -117,7 +121,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
       error: {},
     }),
 
-  setProduct: async (product) => {
+  setProduct: async (product, showPreview = false) => {
     const urls = product.imageUrls || [];
     set({
       productId: Number(product.id),
@@ -130,8 +134,9 @@ export const useProductStore = create<ProductStore>((set, get) => ({
       removedImages: [],
       thumb: Math.max(0, urls.indexOf(product.thumbnailUrl || "")),
       category: product.categoryId?.toString() || "0",
-      open: true,
-      active: product.active
+      open: true && !showPreview,
+      preview: true && showPreview,
+      active: product.active,
     });
   },
 }));

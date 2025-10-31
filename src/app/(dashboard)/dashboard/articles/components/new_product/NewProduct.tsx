@@ -29,6 +29,7 @@ import { SectionActive } from "./SectionActive";
 import { SectionCategory } from "./SectionCategory";
 import Separator from "../../../components/Separator";
 import { SectionThumb } from "./SectionThumb";
+import { isAdmin } from "@/app/utils/roles";
 
 export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
   const { data: session, status, update } = useSession();
@@ -92,7 +93,7 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         stock: 3,
         thumbIndex: thumb,
         removedImages,
-        active
+        active,
       };
 
       formData.append(
@@ -106,7 +107,6 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         .getState()
         .newImages.forEach((file) => formData.append("newImages", file));
 
-
       const method = useProductStore.getState().productId ? "PUT" : "POST";
       const endpoint = useProductStore.getState().productId
         ? `/api/products/${useProductStore.getState().productId}`
@@ -118,7 +118,6 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         token,
       });
 
-      
       setOpen(false);
       toast.success(
         useProductStore.getState().productId
@@ -166,10 +165,12 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="inline-flex items-center gap-2" variant="primary">
-          <Plus className="size-5" />
-          Agregar
-        </Button>
+        {isAdmin(session?.user) && (
+          <Button className="inline-flex items-center gap-2" variant="primary">
+            <Plus className="size-5" />
+            Agregar
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-w-full! max-h-full! w-full h-full border-2 mx-0!">

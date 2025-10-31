@@ -35,9 +35,9 @@ export const ArticlesServerComponent = async ({
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <div className="flex justify-baseline items-center gap-2 ">
-          <SearchProducts placeholder="Buscar" />
+      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
+        <div className="flex flex-col md:flex-row justify-baseline items-center gap-2 ">
+          <SearchProducts placeholder="Buscar"/>
           <Categories />
         </div>
         <div className="flex gap-2">

@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 import { TableProducts } from "./components/TableProducts";
 import NewProduct from "./components/new_product/NewProduct";
 import { ArticlesServerComponent } from "./components/ArticlesServerComponent";
+import { ProductPreview } from "./components/product_view/ProductPreview";
 
 export default async function Page({
   searchParams,
@@ -24,6 +25,7 @@ export default async function Page({
       subtitle=""
     >
       <div className="w-full">
+        <ProductPreview></ProductPreview>
         <ArticlesServerComponent search={query} category={category} />
       </div>
     </DashContainer>

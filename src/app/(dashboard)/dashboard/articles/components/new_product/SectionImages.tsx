@@ -105,10 +105,6 @@ export const SectionImages = () => {
           onChange={handleSelect}
         />
 
-        <div className="text-xs mt-2 text-gray-500">
-          Eliminadas: {removedImages.length}
-          Thumb: {thumb}
-        </div>
       </div>
 
       {/* Previsualización */}

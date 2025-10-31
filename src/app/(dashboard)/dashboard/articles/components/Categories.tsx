@@ -32,7 +32,7 @@ export const Categories = () => {
 
   return (
     <Select value={category} onValueChange={setCategory}>
-      <SelectTrigger className="w-50 h-10! font-[400] text-black">
+      <SelectTrigger className="w-full md:w-50 h-10! font-[400] text-black">
         <SelectValue placeholder="Selecciona un tipo" />
       </SelectTrigger>
       <SelectContent>
