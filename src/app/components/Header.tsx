@@ -39,6 +39,7 @@ export default function Header() {
           <nav className="hidden lg:block">
             <ul className="flex gap-4 font-medium text-gray-300">
               <li>
+<<<<<<< HEAD
                 {" "}
                 <NavLink href="/restaurantes">Restaurantes</NavLink>{" "}
               </li>
@@ -53,6 +54,19 @@ export default function Header() {
               <li>
                 {" "}
                 <NavLink href="#">Servicios</NavLink>{" "}
+=======
+                <NavLink href="/restaurants">Restaurantes</NavLink>
+              </li>
+              <li>
+                <NavLink href="/retail">Retail</NavLink>
+              </li>
+              <li>
+                <NavLink href="/beauty">Belleza</NavLink>
+              </li>
+              <li>
+                {" "}
+                <NavLink href="/services">Servicios</NavLink>{" "}
+>>>>>>> bafa814 (cambio finales)
               </li>
               <li>
                 {" "}
