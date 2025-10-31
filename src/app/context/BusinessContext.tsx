@@ -71,7 +71,7 @@ export const BusinessProvider = ({
     setLoading(true);
     try {
       const data = await request("/business/me", {
-        method: "POST",
+        method: "GET",
         token: session.user.accessToken,
       });
       setBusiness(data);

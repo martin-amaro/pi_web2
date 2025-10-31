@@ -1,6 +1,11 @@
-export const Card = ({ className, children }: { className: string, children: React.ReactNode}) => {
+export type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  className?: string;
+  children?: React.ReactNode;
+};
+
+export const Card = ({ className = '', children, ...props }: CardProps) => {
   return (
-    <div className={"bg-white rounded-xl shadow p-5 " + className}>
+    <div {...props} className={"bg-white rounded-xl shadow p-5 " + className}>
       {children}
     </div>
   );

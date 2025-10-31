@@ -1,5 +1,4 @@
 import Button from "@/app/ui/Button";
-import { Folder } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import {
@@ -21,50 +20,31 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface CategoryProps {
-  active: boolean;
-  description?: string;
-  id: number;
-  name: string;
-}
-
 import { useBusiness } from "@/app/context/BusinessContext";
-import { useBackend } from "@/app/hooks/useBackend";
-import { useSession } from "next-auth/react";
 import { Separator } from "@/components/ui/separator";
+import { useProductStore } from "../../../../../stores/product";
 
-//{ val, set }: { val: string; set: (v: string) => void }
 export const UpdateCategory = ({
   open,
-  setOpen,
-  val,
-  set,
+  setOpen
 }: {
   open: boolean;
   setOpen: (v: boolean) => void;
-  val: string;
-  set: (v: string) => void;
 }) => {
-  const { getBusinessProp, categories } = useBusiness();
-  const [industry, setIndustry] = useState(
-    (getBusinessProp("industry") as string) || "8"
-  );
-  const [error, setError] = useState<string | null>(null);
-  const [category, setCategory] = useState(val);
-  const { request } = useBackend();
-  const { data: session } = useSession();
-  const token = session?.user?.accessToken;
+  const { category, setCategory } = useProductStore();
+  const { categories } = useBusiness();
+  const [newCategory, setNewCategory] = useState(String(category));
 
   const handleCancel = () => {
     setOpen(false);
     setTimeout(() => {
-      setCategory(val || "0");
+      setNewCategory(category || "0");
     }, 300);
   };
 
-  const handleSave = async (name: string) => {
+  const handleSave = async () => {
     setOpen(false);
-    set(category);
+    setCategory(newCategory);
   };
 
   return (
@@ -76,7 +56,7 @@ export const UpdateCategory = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="text">Cambiar</Button>
+        <Button variant="text" onClick={() => setNewCategory(String(category))}>Cambiar</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -87,15 +67,15 @@ export const UpdateCategory = ({
         </DialogHeader>
         <div className="grid gap-6">
           <div className="grid gap-3">
-            <Select value={category} onValueChange={setCategory}>
+            <Select value={newCategory} onValueChange={setNewCategory}>
               <SelectTrigger className="w-full font-[400] text-black">
                 <SelectValue placeholder="Selecciona una categoría" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {/* <SelectLabel>Fruits</SelectLabel> */}
-                  <SelectItem value={"0"}>Sin asignar</SelectItem>
-                  <Separator></Separator>
+                  <SelectItem value={"0"}>Sin categoría</SelectItem>
+                  <Separator />
                   {categories.map((key) => (
                     <SelectItem key={key.id} value={key.id.toString()}>
                       <div className="flex items-center gap-2 ">{key.name}</div>
@@ -105,19 +85,13 @@ export const UpdateCategory = ({
               </SelectContent>
             </Select>
 
-            {/* {error && <InputError message={error} />} */}
           </div>
         </div>
         <DialogFooter>
           <Button variant="alternative" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button
-            onClick={() => handleSave(industry)}
-            // disabled={!industry || industry === getBusinessProp("industry")}
-          >
-            Guardar
-          </Button>
+          <Button onClick={handleSave}>Guardar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

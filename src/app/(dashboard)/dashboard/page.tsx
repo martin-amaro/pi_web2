@@ -1,15 +1,20 @@
-"use client";
 import { auth } from "@/auth";
 import { signOut, useSession } from "next-auth/react";
-import React from "react";
+import React, { Suspense } from "react";
 import { UserAvatar } from "./UserAvatar";
 import { DashHeader } from "./components/DashHeader";
 import { DashTitle } from "./components/DashTitle";
 import DashContainer from "./components/DashContainer";
 import { BookmarkCheck, Package, ReceiptText, Siren } from "lucide-react";
 import { Card } from "@/app/components/Card";
+import { TopCard } from "./components/home/TopCard";
+import { ProductsCard } from "./components/home/ProductsCard";
+import { TopCardLink } from "./components/home/TopCardLink";
+import { TopCardSkeleton } from "./components/home/TopCardSkeleton";
 
-export default function page() {
+export default async function page() {
+  const session = await auth();
+  const user = session?.user;
   // const { data: session, status } = useSession()
 
   // const session = await auth()
@@ -24,7 +29,7 @@ export default function page() {
   return (
     <div className="md:p-8 w-full">
       <div className="p-5 md:p-3">
-        <h1 className="text-2xl font-semibold mb-4">Bienvenido/a otra vez.</h1>
+        <h1 className="text-2xl font-semibold mb-4">¡Bienvenido/a, {user?.name?.trim().split(/\s+/)[0]}!</h1>
         <p className="text-sm text-gray-500 mb-6">
           Configuraste un <strong>0%</strong>.
         </p>
@@ -32,25 +37,30 @@ export default function page() {
 
       <section className="w-full bg-[#f7f7f7] p-5 md:p-6 middle:rounded-2xl">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <TopCard
-            title="Productos registrados"
-            icon={<Package className="size-6 text-blue-text" />}
-          />
+          <Suspense fallback={<TopCardSkeleton/>}>
+            <ProductsCard />
+          </Suspense>
 
-          <TopCard
-            title="Avisos"
-            icon={<Siren className="size-6 text-blue-text" />}
-          />
+          <TopCardLink to="#">
+            <TopCard
+              title="Avisos"
+              icon={<Siren className="size-6 text-blue-text" />}
+            />
+          </TopCardLink>
 
-          <TopCard
-            title="Tareas pendientes"
-            icon={<BookmarkCheck className="size-6 text-blue-text" />}
-          />
+          <TopCardLink to="#">
+            <TopCard
+              title="Tareas pendientes"
+              icon={<BookmarkCheck className="size-6 text-blue-text" />}
+            />
+          </TopCardLink>
 
-          <TopCard
-            title="Movimientos este mes"
-            icon={<ReceiptText className="size-6 text-blue-text" />}
-          />
+          <TopCardLink to="#">
+            <TopCard
+              title="Movimientos este mes"
+              icon={<ReceiptText className="size-6 text-blue-text" />}
+            />
+          </TopCardLink>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 col-span-4">
@@ -146,15 +156,3 @@ export default function page() {
     </div>
   );
 }
-
-
-
-const TopCard = ({ icon, title, value = 0 }: {icon: React.ReactNode, title: string, value?: number}) => (
-  <Card className="w-full col-span-1 flex items-center gap-4 cursor-pointer hover:bg-white/50 transition-colors duration-100">
-    <div className="p-3 bg-[#e9edf6] rounded-lg">{icon}</div>
-    <div>
-      <p className="text-2xl font-semibold text-neutral-800 mt-1">{value}</p>
-      <h2 className="text-gray-600 text-sm font-semibold">{title}</h2>
-    </div>
-  </Card>
-);

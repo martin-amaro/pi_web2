@@ -28,14 +28,15 @@ export default function Button({
     outline:
       " border border-gray-300 text-gray-700 hover:bg-gray-100 px-4 py-2.5 font-medium bg-transparent",
     text: "text-blue-600 font-medium hover:underline! ml-1 px-1 mx-2",
+    circle: "bg-white border border-gray-300 rounded-full! p-1",
   };
 
   const classes = clsx(baseStyles, typeStyles[variant], className);
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
-        {loading ? <LoaderCircle className="animate-spin size-5" /> : children}
+      <Link href={href} className={classes} >
+        {loading ? <LoaderCircle className="animate-spin size-5 " /> : children}
       </Link>
     );
   }
@@ -46,6 +47,7 @@ export default function Button({
       className={classes}
       disabled={disabled || loading}
       type={buttonType}
+      {...props}
     >
       {loading ? <LoaderCircle className="animate-spin size-5" /> : children}
     </button>

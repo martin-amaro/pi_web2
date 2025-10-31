@@ -59,10 +59,10 @@ export const validatePassword = (password: string) => {
 };
 
 export const validateText = (text: string, field?: string) =>  {
-  if (!text) {
+  if (!text.trim()) {
     return `${field || 'El campo'} es obligatorio`;
   }
-  if (text.length < 6) {
+  if (text.trim().length < 6) {
     return `${field || "El campo"} debe tener al menos 6 caracteres.`;
   }
   return "";
