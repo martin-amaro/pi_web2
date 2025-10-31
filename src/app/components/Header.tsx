@@ -39,20 +39,17 @@ export default function Header() {
           <nav className="hidden lg:block">
             <ul className="flex gap-4 font-medium text-gray-300">
               <li>
-                {" "}
-                <NavLink href="/restaurantes">Restaurantes</NavLink>{" "}
+                <NavLink href="/restaurants">Restaurantes</NavLink>
+              </li>
+              <li>
+                <NavLink href="/retail">Retail</NavLink>
+              </li>
+              <li>
+                <NavLink href="/beauty">Belleza</NavLink>
               </li>
               <li>
                 {" "}
-                <NavLink href="/retail">Retail</NavLink>{" "}
-              </li>
-              <li>
-                {" "}
-                <NavLink href="/belleza">Belleza</NavLink>{" "}
-              </li>
-              <li>
-                {" "}
-                <NavLink href="#">Servicios</NavLink>{" "}
+                <NavLink href="/services">Servicios</NavLink>{" "}
               </li>
               <li>
                 {" "}
