@@ -90,7 +90,7 @@ export default function NewProduct({ onCreated }: { onCreated?: () => void }) {
         type,
         price,
         categoryId,
-        stock: 3,
+        stock: 0,
         thumbIndex: thumb,
         removedImages,
         active,

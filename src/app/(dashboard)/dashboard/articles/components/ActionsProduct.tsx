@@ -14,10 +14,17 @@ import { ChevronDown, User } from "lucide-react";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/app/utils/roles";
+import { useProductStore } from "@/app/stores/product";
 
-export const ActionsProduct = () => {
+export const ActionsProduct = ({ ids }: { ids: Set<string> }) => {
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const { setDelete } = useProductStore();
+
+  const handleDelete = () => {
+    setDelete([...ids].map((id) => Number(id)));
+  };
+
   return (
     <div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -34,14 +41,14 @@ export const ActionsProduct = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
-          {!isAdmin(session?.user) ? (
+          {isAdmin(session?.user) ? (
             <>
               <DropdownMenuItem>Alternar disponibilidad</DropdownMenuItem>
               <DropdownMenuItem>Exportar selección</DropdownMenuItem>
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={() => {}} variant="destructive">
+              <DropdownMenuItem onClick={handleDelete} variant="destructive">
                 Eliminar
               </DropdownMenuItem>
             </>

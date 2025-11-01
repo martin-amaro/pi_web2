@@ -18,37 +18,28 @@ import { s } from "framer-motion/client";
 import { InputError } from "../../components/InputError";
 import { isValidEmail } from "@/app/utils/auth";
 import { toast } from "sonner";
+import { useBackend } from "@/app/hooks/useBackend";
 
 export default function UpdateEmail() {
   const { data: session, status, update } = useSession();
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [email, setEmail] = useState(session?.user?.email || "");
   const [newEmail, setNewEmail] = useState(email);
   const token = (session?.user as any)?.accessToken;
-
+  const { request } = useBackend();
 
   const handleSave = async () => {
-      // showMessage("Correo actualizado con éxito", "success");
+    // showMessage("Correo actualizado con éxito", "success");
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      const updatedUser = await request("/auth/me", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+        token,
+        data: {
+          email: newEmail,
         },
-        body: JSON.stringify({ email: newEmail }),
       });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        toast.error(errorData.message || "No se pudo actualizar el correo");
-        return;
-      }
-
-      // Si tu backend devuelve el usuario actualizado:
-      const updatedUser = await res.json();
 
       // Actualizar la sesión correctamente
       const updatedSession = await update({
@@ -69,12 +60,9 @@ export default function UpdateEmail() {
       setNewEmail("");
 
       setOpen(false);
-      toast.success("Correo actualizado con éxito", {
-        
-      });
-    } catch (err) {
-      toast.error("Error al actualizar el correo",);
-
+      toast.success("Correo actualizado con éxito", {});
+    } catch (err: any) {
+      toast.error(err.message || "No se pudo actualizar el correo");
     } finally {
     }
   };
@@ -88,21 +76,21 @@ export default function UpdateEmail() {
     const value = newEmail;
 
     if (value.length === 0) {
-        setError('El correo es obligatorio');
-        return;
+      setError("El correo es obligatorio");
+      return;
     }
 
     if (value === email) {
-        setError('El correo no puede ser igual al actual');
-        return;
+      setError("El correo no puede ser igual al actual");
+      return;
     }
 
     if (value && !isValidEmail(value)) {
-        setError('Correo inválido');
-        return;
+      setError("Correo inválido");
+      return;
     }
 
-    setError('');
+    setError("");
   }, [error, email, newEmail]);
 
   return (
@@ -161,7 +149,6 @@ export default function UpdateEmail() {
 
                 {error && <InputError message={error} />}
               </div>
-              
             </div>
             <DialogFooter>
               <Button variant="alternative" onClick={handleCancelOrClose}>

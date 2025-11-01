@@ -1,17 +1,18 @@
 'use client';
 
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AlertCircle, X } from 'lucide-react';
 import { APP_BACKEND } from '../config';
+import { useBackend } from '../hooks/useBackend';
 
 export const BackendTester = () => {
+  const { request } = useBackend();
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await axios.get(`${APP_BACKEND}/test`);
+        await request('/test');
         setError(false);
       } catch (error) {
         setError(true);

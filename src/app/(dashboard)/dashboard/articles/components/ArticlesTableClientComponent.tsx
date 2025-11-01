@@ -11,6 +11,7 @@ import { useProductStore } from "../../../../stores/product";
 import Button from "@/app/ui/Button";
 import { ActionsProduct } from "./ActionsProduct";
 import { ButtonActions } from "./ButtonActions";
+import DeleteProduct from "./DeleteProduct";
 
 type Props = {
   initialArticles: Article[];
@@ -57,7 +58,7 @@ export default function ArticlesTableClientComponent({
   const deselectAll = () => {
     setSelectedIds(new Set());
     setSelectAll(false);
-  }
+  };
 
   const toggleSelectOne = (id: string) => {
     const newSet = new Set(selectedIds);
@@ -69,41 +70,46 @@ export default function ArticlesTableClientComponent({
   };
 
   return (
-    <div className="rounded-lg md:pt-0 overflow-x-auto">
-      <table className="w-full text-sm text-left text-gray-500 table-fixed mt-6 font-normal! table-caption md:table">
-        <thead className="text-[.8rem] text-gray-700 font-normal! border-b border-[#b3b3b3] bg-gray-50 rounded-lg">
-          <tr className="">
-            <th className="w-[30%] px-6 py-3">
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  checked={selectAll}
-                  onCheckedChange={toggleSelectAll}
-                />
-                <span>Nombre</span>
-              </div>
-            </th>
-            <th className="w-[20%] px-6 py-3max-h-1/2">Categoría</th>
-            <th className="w-[20%] px-6 py-3">Disponibilidad</th>
-            <th className="w-[15%] px-6 py-3">Precio</th>
-            <th className="w-[10%] px-6 py-3">Stock</th>
-            <th className="w-[5%] px-6 py-3 text-right"></th>
-          </tr>
-        </thead>
+    <div className="md:pt-0 overflow-x-auto h-full">
+      <DeleteProduct />
 
-        <tbody>
-          {articles.map((article) => (
-            <Item
-              key={article.id}
-              article={article}
-              toggle={toggleSelectOne}
-              selectedIds={selectedIds}
-            />
-          ))}
-        </tbody>
-      </table>
+      <br />
 
+      <div className="rounded-lg! overflow-y-hidden">
+        <table className="w-full text-sm text-left text-gray-500 table-fixed font-normal! table-caption md:table">
+          <thead className="text-[.8rem] text-gray-700 font-normal! border-b border-[#b3b3b3] bg-gray-50 rounded-lg">
+            <tr className="">
+              <th className="w-[30%] px-6 py-3">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    checked={selectAll}
+                    onCheckedChange={toggleSelectAll}
+                  />
+                  <span>Nombre</span>
+                </div>
+              </th>
+              <th className="w-[20%] px-6 py-3max-h-1/2">Categoría</th>
+              <th className="w-[20%] px-6 py-3">Disponibilidad</th>
+              <th className="w-[15%] px-6 py-3">Precio</th>
+              <th className="w-[10%] px-6 py-3">Stock</th>
+              <th className="w-[5%] px-6 py-3 text-right"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {articles.map((article) => (
+              <Item
+                key={article.id}
+                article={article}
+                toggle={toggleSelectOne}
+                selectedIds={selectedIds}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
       {selectedIds.size > 0 && (
-        <div className="flex justify-between items-center bg-white drop-shadow-2xl drop-shadow-black/20 w-full h-20 absolute left-0 bottom-0 px-7">
+        <div className="flex justify-between items-center bg-white drop-shadow-2xl drop-shadow-black/20 w-full h-20 fixed md:absolute left-0 bottom-0 px-7">
           <div className="flex items-center gap-3">
             <span className="inline-flex font-medium text-sm">
               {selectedIds.size} artículo(s) seleccionado(s)
@@ -112,7 +118,7 @@ export default function ArticlesTableClientComponent({
               Deseleccionar todo
             </Button>
           </div>
-          <ActionsProduct />
+          <ActionsProduct ids={selectedIds} />
         </div>
       )}
     </div>
@@ -177,9 +183,9 @@ const Item = ({
         onClick={(e) => {
           e.stopPropagation();
         }}
-        // 
+        //
       >
-        <ButtonActions article={article}/>
+        <ButtonActions article={article} />
       </td>
     </tr>
   );

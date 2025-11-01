@@ -15,10 +15,10 @@ import { Article } from "@/app/libs/definitions";
 import { useProductStore } from "@/app/stores/product";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/app/utils/roles";
-export const ButtonActions = ({article}: {article: Article}) => {
+export const ButtonActions = ({ article }: { article: Article }) => {
   const [open, setOpen] = useState(false);
-  const {setProduct} = useProductStore();
-   const { data: session } = useSession();
+  const { setDelete } = useProductStore();
+  const { data: session } = useSession();
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -26,7 +26,11 @@ export const ButtonActions = ({article}: {article: Article}) => {
         <Ellipsis className="text-blue-500 hover:text-blue-700 transition-colors" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" side="bottom" align="end">
-        <DropdownMenuItem>Ver artículo</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => useProductStore.getState().setProduct(article, true)}
+        >
+          Ver artículo
+        </DropdownMenuItem>
         {isAdmin(session?.user) ? (
           <>
             <DropdownMenuItem
@@ -38,7 +42,13 @@ export const ButtonActions = ({article}: {article: Article}) => {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={() => {}} variant="destructive">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                setDelete([parseInt(article.id)]);
+              }}
+              variant="destructive"
+            >
               Eliminar
             </DropdownMenuItem>
           </>
