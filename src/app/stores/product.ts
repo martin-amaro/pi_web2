@@ -18,6 +18,7 @@ type ProductStore = {
   loadingAI: boolean;
   error: Record<string, string>;
   preview: boolean;
+  delete: number[];
 
   setOpen: (v: boolean) => void;
   setPreview: (v: boolean) => void;
@@ -31,6 +32,7 @@ type ProductStore = {
   setLoading: (v: boolean) => void;
   setLoadingAI: (v: boolean) => void;
   setError: (v: Record<string, string>) => void;
+  setDelete: (v: number[]) => void;
 
   addNewImage: (file: File) => void;
   removeImage: (index: number) => void;
@@ -55,6 +57,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   loading: false,
   loadingAI: false,
   error: {},
+  delete: [],
 
   setOpen: (v) => set({ open: v }),
   setPreview: (v) => set({ preview: v }),
@@ -68,6 +71,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   setLoading: (v) => set({ loading: v }),
   setLoadingAI: (v) => set({ loadingAI: v }),
   setError: (v) => set({ error: v }),
+  setDelete: (v) => set({ delete: v }),
 
   addNewImage: (file) =>
     set((state) => ({

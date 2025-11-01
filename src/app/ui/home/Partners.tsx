@@ -36,7 +36,7 @@ export default function Partners() {
 
             <div className='mt-5 middle:mt-0 text-center middle:text-left'>
                 <h2 className="text-2xl max-w-sm px-2 font-medium font-a3 text-neutral-800">
-                    Más de <span className='text-accent font-se'>10+</span> empresas que confían en nosotros
+                    Más de <span className='text-primary font-se'>10+</span> empresas que confían en nosotros
                 </h2>
             </div>
 

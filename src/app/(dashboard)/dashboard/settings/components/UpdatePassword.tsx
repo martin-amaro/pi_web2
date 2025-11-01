@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react'
 import { InputError } from '../../components/InputError';
 import { validatePassword } from '@/app/utils/auth';
 import { toast } from 'sonner';
+import { useBackend } from '@/app/hooks/useBackend';
 
 export default function UpdatePassword() {
     const { data: session, status, update } = useSession();
@@ -19,28 +20,19 @@ export default function UpdatePassword() {
     const [password, setPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const token = (session?.user as any)?.accessToken;
+    const { request } = useBackend();
 
     const handleSave = async () => {
       // showMessage("Correo actualizado con éxito", "success");
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      const updatedUser = await request("/auth/me", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+        token,
+        data: {
+          password: newPassword,
         },
-        body: JSON.stringify({ password: newPassword }),
       });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        toast.error(errorData.message || "No se pudo actualizar el correo");
-        return;
-      }
-
-      // Si tu backend devuelve el usuario actualizado:
-      const updatedUser = await res.json();
 
       // Actualizar la sesión correctamente
       const updatedSession = await update({
@@ -56,16 +48,12 @@ export default function UpdatePassword() {
         expires: session?.expires || "",
       });
 
-      // Actualizar estados locales
-    //   setEmail(updatedUser.email);
-    //   setNewEmail("");
-
       setOpen(false);
       toast.success("Correo actualizado con éxito", {
         
       });
-    } catch (err) {
-      toast.error("Error al actualizar el correo",);
+    } catch (err: any) {
+      toast.error("No se pudo actualizar el correo");
 
     } finally {
     }

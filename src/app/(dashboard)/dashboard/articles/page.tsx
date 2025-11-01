@@ -1,14 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import DashContainer from "../components/DashContainer";
-import Cop from "./Cop";
-import { SearchProducts } from "./components/SearchProducts";
-import { Categories } from "./components/Categories";
-import Button from "@/app/ui/Button";
-import { Plus } from "lucide-react";
-import { TableProducts } from "./components/TableProducts";
-import NewProduct from "./components/new_product/NewProduct";
 import { ArticlesServerComponent } from "./components/ArticlesServerComponent";
 import { ProductPreview } from "./components/product_view/ProductPreview";
+import { Loading } from "@/app/components/Loading";
 
 export default async function Page({
   searchParams,
@@ -26,7 +20,11 @@ export default async function Page({
     >
       <div className="w-full">
         <ProductPreview></ProductPreview>
-        <ArticlesServerComponent search={query} category={category} />
+        <Suspense fallback={<Loading className="min-h-40! h-40!"/>}>
+          <ArticlesServerComponent search={query} category={category} />
+
+        </Suspense>
+        
       </div>
     </DashContainer>
   );

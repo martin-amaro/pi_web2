@@ -83,7 +83,7 @@ export const ProductPreview = () => {
         </div>
 
         <DialogFooter className="md:items-end px-8">
-          {!isAdmin(session?.user) && (
+          {isAdmin(session?.user) && (
             <Button
               variant="alternative"
               className="flex gap-2"
