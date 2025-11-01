@@ -126,24 +126,24 @@ export default function Header() {
         >
           <ul className="w-full flex flex-col text-base font-medium text-gray-800">
             <li>
-              <a href="#" className="header-mobile-link">
-                Rutas de Aprendizaje
-              </a>
+              <Link href="/restaurants" className="header-mobile-link">
+                Restaurantes
+              </Link>
             </li>
             <li>
-              <a href="#" className="header-mobile-link">
-                Certificaciones
-              </a>
+              <Link href="/retail" className="header-mobile-link">
+                Retail
+              </Link>
             </li>
             <li>
-              <a href="#" className="header-mobile-link">
-                Mentores
-              </a>
+              <Link href="/beauty" className="header-mobile-link">
+                Belleza
+              </Link>
             </li>
             <li>
-              <a href="#" className="header-mobile-link">
-                Blog
-              </a>
+              <Link href="/services" className="header-mobile-link">
+                Servicios
+              </Link>
             </li>
             <li>
               <a href="#" className="header-mobile-link">
