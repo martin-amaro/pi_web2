@@ -66,7 +66,7 @@ export default function SuccessPage() {
     };
 
     verifyStripeSession();
-  }, [sessionId, session?.user?.accessToken, router, request, update]);
+  }, [sessionId, session?.user?.accessToken]);
 
   // UI
   if (valid === null)
